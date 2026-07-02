@@ -8,9 +8,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <group name="sale_info" position="inside">
-                <field name="end_customer_id"/>
-            </group>
+            <field name="partner_id" position="after">
+                <field name="end_customer_id"
+                       placeholder="Type to find a partner..."
+                       readonly="state in ['cancel', 'sale']"/>
+            </field>
         </field>
     </record>
 
@@ -20,7 +22,7 @@
         <field name="inherit_id" ref="sale.sale_order_tree"/>
         <field name="arch" type="xml">
             <field name="client_order_ref" position="after">
-                <field name="end_customer_id" optional="hide"/>
+                <field name="end_customer_id" optional="show"/>
             </field>
         </field>
     </record>
