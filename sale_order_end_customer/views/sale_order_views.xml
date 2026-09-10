@@ -21,7 +21,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.sale_order_tree"/>
         <field name="arch" type="xml">
-            <field name="client_order_ref" position="after">
+            <field name="partner_id" position="after">
                 <field name="end_customer_id" optional="show"/>
             </field>
         </field>

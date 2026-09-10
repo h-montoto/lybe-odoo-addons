@@ -19,11 +19,11 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-            <field name="ref" position="after">
+            <xpath expr="(//field[@name='invoice_partner_display_name'])[2]" position="after">
                 <field name="end_customer_id"
                        optional="show"
                        column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund')"/>
-            </field>
+            </xpath>
         </field>
     </record>
 
