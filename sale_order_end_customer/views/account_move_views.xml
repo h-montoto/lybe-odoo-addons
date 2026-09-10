@@ -14,4 +14,36 @@
         </field>
     </record>
 
+    <record id="account_move_end_customer_view_tree" model="ir.ui.view">
+        <field name="name">account.move.list.end.customer</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="after">
+                <field name="end_customer_id"
+                       optional="show"
+                       column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund')"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="account_move_end_customer_view_search" model="ir.ui.view">
+        <field name="name">account.move.search.end.customer</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="end_customer_id"
+                       operator="child_of"
+                       invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"/>
+            </field>
+            <filter name="partner" position="after">
+                <filter name="group_by_end_customer"
+                        string="Cliente Final"
+                        context="{'group_by': 'end_customer_id'}"
+                        invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"/>
+            </filter>
+        </field>
+    </record>
+
 </odoo>
