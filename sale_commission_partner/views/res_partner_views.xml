@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 LyBe Creators - Hugo Montoto <hugo.montoto@gmail.com>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_partner_form_commission_partner" model="ir.ui.view">
+        <field name="name">res.partner.form.commission.partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="commission_oca.view_partner_form_agent" />
+        <field name="arch" type="xml">
+            <page name="agent_information" position="after">
+                <page
+                    name="commission_partner_agents"
+                    string="Agent commissions"
+                    groups="commission_oca.group_commission_user"
+                    invisible="parent_id"
+                >
+                    <field
+                        name="commission_partner_agent_ids"
+                        nolabel="1"
+                        context="{'default_partner_id': id}"
+                    >
+                        <list editable="bottom">
+                            <field name="agent_id" />
+                            <field name="commission_id" />
+                            <field name="commission_settlement_type" optional="show" />
+                            <field name="commission_invoice_state" optional="hide" />
+                        </list>
+                    </field>
+                    <p class="text-muted">
+                        Agents listed here use this commission plan when selling to
+                        this customer, instead of their own default plan. Agents
+                        without a line keep their default plan.
+                    </p>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
