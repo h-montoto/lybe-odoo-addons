@@ -29,7 +29,7 @@ does not change any existing behaviour until a rule is defined.
 This module depends on `sale_commission_oca`, available in the
 [OCA/commission](https://github.com/OCA/commission) repository. Add that
 repository to your addons path and install the module as usual, either from the
-*Apps* menu or with:
+_Apps_ menu or with:
 
 ```
 odoo -d <database> -i sale_commission_partner
@@ -39,21 +39,21 @@ odoo -d <database> -i sale_commission_partner
 
 To configure this module you need to:
 
-1. Go to *Sales > Orders > Customers* and open a customer.
-2. In the *Sales & Purchase* tab, add the agents that work with this customer in
-   the *Agents* field, as usual.
-3. Go to the *Agent commissions* tab and add one line per agent that needs a
+1. Go to _Sales > Orders > Customers_ and open a customer.
+2. In the _Sales & Purchase_ tab, add the agents that work with this customer in
+   the _Agents_ field, as usual.
+3. Go to the _Agent commissions_ tab and add one line per agent that needs a
    specific commission plan on this customer.
 
-Rules can also be managed all together from *Invoicing > Commissions > Agent
-commissions per customer*.
+Rules can also be managed all together from _Invoicing > Commissions > Agent
+commissions per customer_.
 
 Take into account that:
 
 - Rules are defined on the company, and they are shared by all of its contacts
   (delivery and invoicing addresses).
-- The *Settlement type* column shows the settlement type of the chosen plan. A
-  plan whose settlement type is not *Sales Invoices* is not applied to sale
+- The _Settlement type_ column shows the settlement type of the chosen plan. A
+  plan whose settlement type is not _Sales Invoices_ is not applied to sale
   orders nor customer invoices, exactly as it happens with the agent default
   plan in the base module.
 
@@ -69,7 +69,7 @@ To use this module you need to:
    lines, and the settlement takes each line with its own plan.
 
 Changing a rule does not modify orders or invoices already created. To apply a
-new rule on an existing order, use the *Recompute commissions* action of the
+new rule on an existing order, use the _Recompute commissions_ action of the
 sale order. Lines that are already settled cannot be modified.
 
 ## Known issues / Roadmap

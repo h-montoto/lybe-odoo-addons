@@ -9,10 +9,10 @@ and this project adheres to the OCA module versioning scheme.
 
 ### Added
 
--   Specific commission plans per agent-customer pair, defined in a new
-    *Agent commissions* tab on the customer form.
--   New model `sale.commission.partner.agent` holding the
-    customer-agent-commission rules, with its own list, form, action and
-    menu entry under *Commissions*.
--   The specific plan is applied both to sale order lines and to customer
-    invoice lines, and is carried over to the commission settlements.
+- Specific commission plans per agent-customer pair, defined in a new
+  _Agent commissions_ tab on the customer form.
+- New model `sale.commission.partner.agent` holding the
+  customer-agent-commission rules, with its own list, form, action and
+  menu entry under _Commissions_.
+- The specific plan is applied both to sale order lines and to customer
+  invoice lines, and is carried over to the commission settlements.
