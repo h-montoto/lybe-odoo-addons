@@ -1,1 +1,0 @@
-- LyBe Creators <hola@lybecreators.com>
