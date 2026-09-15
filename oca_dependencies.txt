@@ -1,0 +1,3 @@
+# Repositories holding addons this repository depends on.
+# Format: <repo-name> <optional-remote-url> <optional-branch>
+commission https://github.com/OCA/commission 19.0
