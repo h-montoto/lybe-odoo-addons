@@ -6,8 +6,8 @@ To configure this module you need to:
 3.  Go to the *Agent commissions* tab and add one line per agent that
     needs a specific commission plan on this customer.
 
-Rules can also be managed all together from *Invoicing \> Commissions \>
-Agent commissions per customer*.
+Rules can also be managed all together from *Commissions \> Agent
+commissions per customer*.
 
 Take into account that:
 
