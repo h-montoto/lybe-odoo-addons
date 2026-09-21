@@ -1,3 +1,12 @@
+## 19.0.1.1.0 (2026-09-21)
+
+- The *Agent commissions* tab is only shown on customers having agents
+  assigned, and the *Agent* column only offers the agents of that customer,
+  as rules for any other agent are never applied.
+- The agent form lists, under *Agent information*, the customers where it
+  has a specific commission plan.
+- Added the Spanish translation.
+
 ## 19.0.1.0.0 (2026-09-15)
 
 First version of the module.

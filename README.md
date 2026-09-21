@@ -22,7 +22,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[sale_commission_partner](sale_commission_partner/) | 19.0.1.0.0 |  | Define specific commission plans per agent-customer pair
+[sale_commission_partner](sale_commission_partner/) | 19.0.1.1.0 |  | Define specific commission plans per agent-customer pair
 
 [//]: # (end addons)
 

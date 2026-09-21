@@ -398,14 +398,15 @@ Only for development or testing purpose, do not use in production.
 <li><a class="reference internal" href="#usage" id="toc-entry-2">Usage</a></li>
 <li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-3">Known issues / Roadmap</a></li>
 <li><a class="reference internal" href="#changelog" id="toc-entry-4">Changelog</a><ul>
-<li><a class="reference internal" href="#section-1" id="toc-entry-5">19.0.1.0.0 (2026-09-15)</a></li>
+<li><a class="reference internal" href="#section-1" id="toc-entry-5">19.0.1.1.0 (2026-09-21)</a></li>
+<li><a class="reference internal" href="#section-2" id="toc-entry-6">19.0.1.0.0 (2026-09-15)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-6">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-7">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="toc-entry-8">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="toc-entry-9">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-10">Maintainers</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-7">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-8">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-9">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-10">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-11">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -424,12 +425,18 @@ needs a specific commission plan on this customer.</li>
 commissions per customer</em>.</p>
 <p>Take into account that:</p>
 <ul class="simple">
+<li>The <em>Agent commissions</em> tab is only shown on customers having agents
+assigned, as a rule for an agent that does not work with the customer
+would never be applied. For the same reason, the <em>Agent</em> column only
+offers the agents listed in the <em>Agents</em> field of that customer.</li>
 <li>Rules are defined on the company, and they are shared by all of its
-contacts (delivery and invoicing addresses).</li>
+contacts (delivery and invoicing addresses). A rule added from a child
+contact is stored on its company.</li>
 <li>The <em>Settlement type</em> column shows the settlement type of the chosen
 plan. A plan whose settlement type is not <em>Sales Invoices</em> is not
 applied to sale orders nor customer invoices, exactly as it happens
-with the agent default plan in the base module.</li>
+with the agent default plan in the base module. Such an agent gets no
+commission line at all, instead of falling back to its default plan.</li>
 </ul>
 </div>
 <div class="section" id="usage">
@@ -443,6 +450,10 @@ carry their own default plan.</li>
 <li>Confirm and invoice the order as usual. The plan is copied to the
 invoice lines, and the settlement takes each line with its own plan.</li>
 </ol>
+<p>The form of an agent lists, under <em>Agent information</em>, the customers
+where it has a specific commission plan. That list is read only, as the
+rules belong to the customer: they are added and removed from the
+customer form, or from <em>Commissions &gt; Agent commissions per customer</em>.</p>
 <p>Changing a rule does not modify orders or invoices already created. To
 apply a new rule on an existing order, use the <em>Recompute commissions</em>
 action of the sale order. Lines that are already settled cannot be
@@ -458,7 +469,18 @@ agent, it cannot be defined per agent-customer pair.</li>
 <div class="section" id="changelog">
 <h2><a class="toc-backref" href="#toc-entry-4">Changelog</a></h2>
 <div class="section" id="section-1">
-<h3><a class="toc-backref" href="#toc-entry-5">19.0.1.0.0 (2026-09-15)</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-5">19.0.1.1.0 (2026-09-21)</a></h3>
+<ul class="simple">
+<li>The <em>Agent commissions</em> tab is only shown on customers having agents
+assigned, and the <em>Agent</em> column only offers the agents of that
+customer, as rules for any other agent are never applied.</li>
+<li>The agent form lists, under <em>Agent information</em>, the customers where
+it has a specific commission plan.</li>
+<li>Added the Spanish translation.</li>
+</ul>
+</div>
+<div class="section" id="section-2">
+<h3><a class="toc-backref" href="#toc-entry-6">19.0.1.0.0 (2026-09-15)</a></h3>
 <p>First version of the module.</p>
 <ul class="simple">
 <li>Specific commission plans per agent-customer pair, defined in a new
@@ -472,7 +494,7 @@ invoice lines, and is carried over to the commission settlements.</li>
 </div>
 </div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#toc-entry-6">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-7">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/h-montoto/lybe-odoo-addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -480,15 +502,15 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#toc-entry-7">Credits</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-8">Credits</a></h2>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#toc-entry-8">Authors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-9">Authors</a></h3>
 <ul class="simple">
 <li>LyBe Creators</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#toc-entry-9">Contributors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-10">Contributors</a></h3>
 <ul class="simple">
 <li><a class="reference external" href="https://www.lybecreators.com">LyBe Creators</a>:<ul>
 <li>Hugo Montoto &lt;<a class="reference external" href="mailto:hugo.montoto&#64;gmail.com">hugo.montoto&#64;gmail.com</a>&gt;</li>
@@ -497,7 +519,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-10">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-11">Maintainers</a></h3>
 <p>This module is part of the <a class="reference external" href="https://github.com/h-montoto/lybe-odoo-addons/tree/19.0/sale_commission_partner">h-montoto/lybe-odoo-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
 </div>

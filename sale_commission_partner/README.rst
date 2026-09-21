@@ -65,12 +65,18 @@ commissions per customer*.
 
 Take into account that:
 
+- The *Agent commissions* tab is only shown on customers having agents
+  assigned, as a rule for an agent that does not work with the customer
+  would never be applied. For the same reason, the *Agent* column only
+  offers the agents listed in the *Agents* field of that customer.
 - Rules are defined on the company, and they are shared by all of its
-  contacts (delivery and invoicing addresses).
+  contacts (delivery and invoicing addresses). A rule added from a child
+  contact is stored on its company.
 - The *Settlement type* column shows the settlement type of the chosen
   plan. A plan whose settlement type is not *Sales Invoices* is not
   applied to sale orders nor customer invoices, exactly as it happens
-  with the agent default plan in the base module.
+  with the agent default plan in the base module. Such an agent gets no
+  commission line at all, instead of falling back to its default plan.
 
 Usage
 =====
@@ -83,6 +89,11 @@ To use this module you need to:
    carry their own default plan.
 3. Confirm and invoice the order as usual. The plan is copied to the
    invoice lines, and the settlement takes each line with its own plan.
+
+The form of an agent lists, under *Agent information*, the customers
+where it has a specific commission plan. That list is read only, as the
+rules belong to the customer: they are added and removed from the
+customer form, or from *Commissions > Agent commissions per customer*.
 
 Changing a rule does not modify orders or invoices already created. To
 apply a new rule on an existing order, use the *Recompute commissions*
@@ -97,6 +108,16 @@ Known issues / Roadmap
 
 Changelog
 =========
+
+19.0.1.1.0 (2026-09-21)
+-----------------------
+
+- The *Agent commissions* tab is only shown on customers having agents
+  assigned, and the *Agent* column only offers the agents of that
+  customer, as rules for any other agent are never applied.
+- The agent form lists, under *Agent information*, the customers where
+  it has a specific commission plan.
+- Added the Spanish translation.
 
 19.0.1.0.0 (2026-09-15)
 -----------------------
