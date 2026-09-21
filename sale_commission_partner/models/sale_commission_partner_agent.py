@@ -39,6 +39,14 @@ class SaleCommissionPartnerAgent(models.Model):
         help="Commission plan applied to this agent on this customer, "
         "replacing the agent's default commission plan.",
     )
+    allowed_agent_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Allowed agents",
+        compute="_compute_allowed_agent_ids",
+        help="Technical field restricting the agent selection to the agents "
+        "assigned to the customer, as a rule for any other agent would never "
+        "be applied.",
+    )
     # Informative fields, so that the chosen plan can be judged at a glance
     # while configuring the rule (an incompatible settlement type silently
     # leaves the agent out of the commission lines).
@@ -57,6 +65,13 @@ class SaleCommissionPartnerAgent(models.Model):
         string="Invoice status",
         readonly=True,
     )
+
+    @api.depends("partner_id")
+    def _compute_allowed_agent_ids(self):
+        for record in self:
+            record.allowed_agent_ids = (
+                record.partner_id.commercial_partner_id.commission_agent_ids
+            )
 
     @api.model_create_multi
     def create(self, vals_list):

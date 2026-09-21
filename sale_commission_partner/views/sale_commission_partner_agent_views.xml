@@ -7,8 +7,9 @@
         <field name="model">sale.commission.partner.agent</field>
         <field name="arch" type="xml">
             <list editable="bottom">
+                <field name="allowed_agent_ids" column_invisible="1" />
                 <field name="partner_id" optional="show" />
-                <field name="agent_id" />
+                <field name="agent_id" domain="[('id', 'in', allowed_agent_ids)]" />
                 <field name="commission_id" />
                 <field name="commission_type" optional="hide" />
                 <field name="commission_settlement_type" optional="show" />
@@ -24,8 +25,12 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="allowed_agent_ids" invisible="1" />
                             <field name="partner_id" />
-                            <field name="agent_id" />
+                            <field
+                                name="agent_id"
+                                domain="[('id', 'in', allowed_agent_ids)]"
+                            />
                         </group>
                         <group>
                             <field name="commission_id" />

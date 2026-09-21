@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 16:36+0000\n"
-"PO-Revision-Date: 2026-09-21 16:36+0000\n"
+"POT-Creation-Date: 2026-09-21 16:45+0000\n"
+"PO-Revision-Date: 2026-09-21 16:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -58,6 +58,11 @@ msgid ""
 "                        this customer, instead of their own default plan. Agents\n"
 "                        without a line keep their default plan."
 msgstr "Los agentes indicados aquí utilizan este plan de comisión al vender a este cliente, en lugar de su propio plan por defecto. Los agentes sin línea mantienen su plan por defecto."
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__allowed_agent_ids
+msgid "Allowed agents"
+msgstr "Agentes permitidos"
 
 #. module: sale_commission_partner
 #: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__commission_id
@@ -180,6 +185,13 @@ msgstr "Tipo de liquidación"
 #: model:ir.model,name:sale_commission_partner.model_sale_commission_partner_agent
 msgid "Specific commission plan for an agent-customer pair"
 msgstr "Plan de comisión específico para un par agente-cliente"
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_sale_commission_partner_agent__allowed_agent_ids
+msgid ""
+"Technical field restricting the agent selection to the agents assigned to "
+"the customer, as a rule for any other agent would never be applied."
+msgstr "Campo técnico que limita la selección de agentes a los agentes asignados al cliente, ya que una regla para cualquier otro agente no se aplicaría nunca."
 
 #. module: sale_commission_partner
 #: model:ir.model.constraint,message:sale_commission_partner.constraint_sale_commission_partner_agent_unique_partner_agent

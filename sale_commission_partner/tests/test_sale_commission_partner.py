@@ -227,3 +227,23 @@ class TestSaleCommissionPartner(TestSaleCommissionPartnerCommon):
         self.assertEqual(
             order.order_line.agent_ids.commission_id, self.commission_specific
         )
+
+    def test_allowed_agents_are_the_ones_assigned_to_the_customer(self):
+        unassigned_agent = self.res_partner_model.create(
+            {
+                "name": "Test Agent - Not assigned",
+                "agent": True,
+                "settlement": "monthly",
+                "commission_id": self.commission_default.id,
+            }
+        )
+        rule = self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        self.assertEqual(rule.allowed_agent_ids, self.customer_a.commission_agent_ids)
+        self.assertNotIn(unassigned_agent, rule.allowed_agent_ids)
+
+    def test_allowed_agents_of_a_child_contact_come_from_the_company(self):
+        child = self.res_partner_model.create(
+            {"name": "Customer A - Shipping", "parent_id": self.customer_a.id}
+        )
+        rule = self._create_rule(child, self.agent, self.commission_specific)
+        self.assertIn(self.agent, rule.allowed_agent_ids)

@@ -12,7 +12,7 @@
                     name="commission_partner_agents"
                     string="Agent commissions"
                     groups="commission_oca.group_commission_user"
-                    invisible="parent_id"
+                    invisible="parent_id or not commission_agent_ids"
                 >
                     <field
                         name="commission_partner_agent_ids"
@@ -20,7 +20,11 @@
                         context="{'default_partner_id': id}"
                     >
                         <list editable="bottom">
-                            <field name="agent_id" />
+                            <field name="allowed_agent_ids" column_invisible="1" />
+                            <field
+                                name="agent_id"
+                                domain="[('id', 'in', allowed_agent_ids)]"
+                            />
                             <field name="commission_id" />
                             <field name="commission_settlement_type" optional="show" />
                             <field name="commission_invoice_state" optional="hide" />
