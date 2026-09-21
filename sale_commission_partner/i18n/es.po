@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-21 16:45+0000\n"
-"PO-Revision-Date: 2026-09-21 16:45+0000\n"
+"POT-Creation-Date: 2026-09-21 17:23+0000\n"
+"PO-Revision-Date: 2026-09-21 17:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -113,6 +113,29 @@ msgstr "Cliente"
 #: model:ir.model.fields,help:sale_commission_partner.field_sale_commission_partner_agent__partner_id
 msgid "Customer for which this agent gets a specific commission plan."
 msgstr "Cliente para el que este agente obtiene un plan de comisión específico."
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_res_partner__agent_commission_partner_ids
+#: model:ir.model.fields,field_description:sale_commission_partner.field_res_users__agent_commission_partner_ids
+#: model_terms:ir.ui.view,arch_db:sale_commission_partner.view_partner_form_commission_partner
+msgid "Customer specific commissions"
+msgstr "Comisiones específicas por cliente"
+
+#. module: sale_commission_partner
+#: model_terms:ir.ui.view,arch_db:sale_commission_partner.view_partner_form_commission_partner
+msgid ""
+"Customers where this agent gets the commission plan listed\n"
+"                    here, instead of its own default plan. They are defined on\n"
+"                    each customer form."
+msgstr "Clientes en los que este agente obtiene el plan de comisión aquí indicado, en lugar de su propio plan por defecto. Se definen en la ficha de cada cliente."
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_res_partner__agent_commission_partner_ids
+#: model:ir.model.fields,help:sale_commission_partner.field_res_users__agent_commission_partner_ids
+msgid ""
+"Customers where this agent has a specific commission plan instead of its own"
+" default one."
+msgstr "Clientes en los que este agente tiene un plan de comisión específico en lugar de su propio plan por defecto."
 
 #. module: sale_commission_partner
 #: model_terms:ir.actions.act_window,help:sale_commission_partner.sale_commission_partner_agent_action

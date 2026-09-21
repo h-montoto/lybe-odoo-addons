@@ -247,3 +247,18 @@ class TestSaleCommissionPartner(TestSaleCommissionPartnerCommon):
         )
         rule = self._create_rule(child, self.agent, self.commission_specific)
         self.assertIn(self.agent, rule.allowed_agent_ids)
+
+    def test_agent_lists_the_customers_where_it_has_a_specific_plan(self):
+        rule_a = self._create_rule(
+            self.customer_a, self.agent, self.commission_specific
+        )
+        rule_b = self._create_rule(self.customer_b, self.agent, self.commission_other)
+        self.assertEqual(self.agent.agent_commission_partner_ids, rule_a + rule_b)
+        self.assertEqual(
+            self.agent.agent_commission_partner_ids.mapped("partner_id"),
+            self.customer_a + self.customer_b,
+        )
+
+    def test_customer_rules_are_not_listed_as_agent_rules(self):
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        self.assertFalse(self.customer_a.agent_commission_partner_ids)

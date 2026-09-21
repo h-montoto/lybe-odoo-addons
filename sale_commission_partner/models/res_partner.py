@@ -15,6 +15,14 @@ class ResPartner(models.Model):
         "selling to this customer.",
     )
 
+    agent_commission_partner_ids = fields.One2many(
+        comodel_name="sale.commission.partner.agent",
+        inverse_name="agent_id",
+        string="Customer specific commissions",
+        help="Customers where this agent has a specific commission plan "
+        "instead of its own default one.",
+    )
+
     def _get_specific_agent_commissions(self):
         """Return {agent: commission} for the rules that apply to this customer.
 

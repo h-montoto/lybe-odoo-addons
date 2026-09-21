@@ -37,6 +37,22 @@
                     </p>
                 </page>
             </page>
+            <page name="agent_information" position="inside">
+                <separator string="Customer specific commissions" />
+                <field name="agent_commission_partner_ids" nolabel="1" readonly="1">
+                    <list>
+                        <field name="partner_id" />
+                        <field name="commission_id" />
+                        <field name="commission_type" optional="hide" />
+                        <field name="commission_invoice_state" optional="hide" />
+                    </list>
+                </field>
+                <p class="text-muted">
+                    Customers where this agent gets the commission plan listed
+                    here, instead of its own default plan. They are defined on
+                    each customer form.
+                </p>
+            </page>
         </field>
     </record>
 </odoo>
