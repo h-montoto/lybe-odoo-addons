@@ -12,7 +12,6 @@
                 <field name="agent_id" domain="[('id', 'in', allowed_agent_ids)]" />
                 <field name="commission_id" />
                 <field name="commission_type" optional="hide" />
-                <field name="commission_settlement_type" optional="show" />
                 <field name="commission_invoice_state" optional="hide" />
             </list>
         </field>
@@ -35,7 +34,6 @@
                         <group>
                             <field name="commission_id" />
                             <field name="commission_type" />
-                            <field name="commission_settlement_type" />
                             <field name="commission_invoice_state" />
                         </group>
                     </group>
