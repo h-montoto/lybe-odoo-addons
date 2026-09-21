@@ -1,0 +1,187 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_commission_partner
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 16:36+0000\n"
+"PO-Revision-Date: 2026-09-21 16:36+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sale_commission_partner
+#. odoo-python
+#: code:addons/sale_commission_partner/models/sale_commission_partner_agent.py:0
+msgid ""
+"%(partner)s is not an agent, so no specific commission can be defined for "
+"it."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__agent_id
+msgid "Agent"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model_terms:ir.ui.view,arch_db:sale_commission_partner.view_partner_form_commission_partner
+msgid "Agent commissions"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.actions.act_window,name:sale_commission_partner.sale_commission_partner_agent_action
+#: model:ir.ui.menu,name:sale_commission_partner.sale_commission_partner_agent_menu
+msgid "Agent commissions per customer"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_res_partner__commission_partner_agent_ids
+#: model:ir.model.fields,field_description:sale_commission_partner.field_res_users__commission_partner_agent_ids
+msgid "Agent specific commissions"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_sale_commission_partner_agent__agent_id
+msgid "Agent that gets a specific commission plan for this customer."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model_terms:ir.ui.view,arch_db:sale_commission_partner.view_partner_form_commission_partner
+msgid ""
+"Agents listed here use this commission plan when selling to\n"
+"                        this customer, instead of their own default plan. Agents\n"
+"                        without a line keep their default plan."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__commission_id
+msgid "Commission"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_sale_commission_partner_agent__commission_id
+msgid ""
+"Commission plan applied to this agent on this customer, replacing the "
+"agent's default commission plan."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_res_partner__commission_partner_agent_ids
+#: model:ir.model.fields,help:sale_commission_partner.field_res_users__commission_partner_agent_ids
+msgid ""
+"Commission plans that override the agent's default plan when selling to this"
+" customer."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__commission_type
+msgid "Commission type"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model,name:sale_commission_partner.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__partner_id
+msgid "Customer"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_sale_commission_partner_agent__partner_id
+msgid "Customer for which this agent gets a specific commission plan."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model_terms:ir.actions.act_window,help:sale_commission_partner.sale_commission_partner_agent_action
+msgid "Define a specific commission plan for an agent on a given customer"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_commission_mixin__display_name
+#: model:ir.model.fields,field_description:sale_commission_partner.field_res_partner__display_name
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_commission_mixin__id
+#: model:ir.model.fields,field_description:sale_commission_partner.field_res_partner__id
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__commission_invoice_state
+msgid "Invoice status"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model,name:sale_commission_partner.model_commission_mixin
+msgid ""
+"Mixin model for applying to any object that wants to handle commissions"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_sale_commission_partner_agent__commission_invoice_state
+msgid ""
+"Select the invoice status for settling the commissions:\n"
+"* 'Invoice Based': Commissions are settled when the invoice is issued.\n"
+"* 'Payment Based': Commissions are settled when the invoice is paid."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,help:sale_commission_partner.field_sale_commission_partner_agent__commission_type
+msgid ""
+"Select the percentage type of the commission:\n"
+"* 'Fixed percentage': all commissions are computed with a fixed percentage. You can fill the percentage in the field \"Fixed percentage\".\n"
+"* 'By sections': percentage varies depending amount intervals. You can fill intervals and percentages in the section \"Rate definition\"."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.fields,field_description:sale_commission_partner.field_sale_commission_partner_agent__commission_settlement_type
+msgid "Settlement type"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model,name:sale_commission_partner.model_sale_commission_partner_agent
+msgid "Specific commission plan for an agent-customer pair"
+msgstr ""
+
+#. module: sale_commission_partner
+#: model:ir.model.constraint,message:sale_commission_partner.constraint_sale_commission_partner_agent_unique_partner_agent
+msgid "There can only be one specific commission per agent and customer."
+msgstr ""
+
+#. module: sale_commission_partner
+#: model_terms:ir.actions.act_window,help:sale_commission_partner.sale_commission_partner_agent_action
+msgid ""
+"When an agent sells to this customer, the plan defined here is used\n"
+"                instead of the agent's default commission plan."
+msgstr ""
