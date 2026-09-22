@@ -31,6 +31,34 @@ class TestProductNameMultiCompany(TransactionCase):
             }
         )
         cls.variant = cls.template.product_variant_id
+        cls.attribute = cls.env["product.attribute"].create(
+            {
+                "name": "Color",
+                "value_ids": [
+                    (0, 0, {"name": "Rojo"}),
+                    (0, 0, {"name": "Azul"}),
+                ],
+            }
+        )
+        cls.template_variants = cls.env["product.template"].create(
+            {
+                "name": "Silla",
+                "default_code": "SILLA",
+                "attribute_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "attribute_id": cls.attribute.id,
+                            "value_ids": [(6, 0, cls.attribute.value_ids.ids)],
+                        },
+                    )
+                ],
+            }
+        )
+        cls.variant_rojo = cls.template_variants.product_variant_ids.filtered(
+            lambda p: "Rojo" in p.product_template_attribute_value_ids.mapped("name")
+        )
 
     def test_name_company_stored_per_company(self):
         self.template.with_company(self.company_a).name_company = "Nombre A"
@@ -91,3 +119,44 @@ class TestProductNameMultiCompany(TransactionCase):
         self.template.invalidate_recordset(["name_company_summary"])
         from_b = self.template.with_company(self.company_b).name_company_summary
         self.assertEqual(from_a, from_b)
+
+    def test_display_name_for_company_keeps_internal_reference(self):
+        self.variant.with_company(self.company_a).name_company = "Producto de Seda"
+        self.assertEqual(
+            self.variant._get_display_name_for_company(self.company_a),
+            "[111] Producto de Seda",
+        )
+
+    def test_display_name_for_company_falls_back_to_core_display_name(self):
+        self.assertEqual(
+            self.variant._get_display_name_for_company(self.company_c),
+            self.variant.with_company(self.company_c).display_name,
+        )
+
+    def test_display_name_for_company_keeps_variant_attributes(self):
+        """El sufijo de atributos que añade el core no se puede perder.
+
+        La referencia interna vive en la variante, no en la plantilla, así que
+        se asigna aquí para comprobar que el helper conserva las dos partes.
+        """
+        self.variant_rojo.default_code = "SILLA-R"
+        self.template_variants.with_company(self.company_a).name_company = "Butaca"
+        self.assertEqual(
+            self.variant_rojo._get_display_name_for_company(self.company_a),
+            "[SILLA-R] Butaca (Rojo)",
+        )
+
+    def test_display_name_for_company_variant_without_code(self):
+        """Una variante sin referencia propia imprime nombre y atributos."""
+        self.template_variants.with_company(self.company_a).name_company = "Butaca"
+        self.assertEqual(
+            self.variant_rojo._get_display_name_for_company(self.company_a),
+            "Butaca (Rojo)",
+        )
+
+    def test_display_name_for_company_without_default_code(self):
+        self.variant.with_company(self.company_a).name_company = "Producto de Seda"
+        product = self.variant.with_context(display_default_code=False)
+        self.assertEqual(
+            product._get_display_name_for_company(self.company_a), "Producto de Seda"
+        )
