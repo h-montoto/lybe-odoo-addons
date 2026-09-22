@@ -31,3 +31,18 @@ class ProductProduct(models.Model):
         if self.env.context.get("display_default_code", True) and product.default_code:
             return f"[{product.default_code}] {name}"
         return name
+
+    def get_product_multiline_description_sale(self):
+        """Use the company-specific name when the current company defines one.
+
+        Mirrors the core implementation (``product/models/product_product.py``),
+        which builds the description from ``display_name`` plus
+        ``description_sale``.
+        """
+        self.ensure_one()
+        if not self.name_company:
+            return super().get_product_multiline_description_sale()
+        name = self._get_display_name_for_company(self.env.company)
+        if self.description_sale:
+            name += "\n" + self.description_sale
+        return name

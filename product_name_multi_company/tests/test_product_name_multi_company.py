@@ -59,6 +59,14 @@ class TestProductNameMultiCompany(TransactionCase):
         cls.variant_rojo = cls.template_variants.product_variant_ids.filtered(
             lambda p: "Rojo" in p.product_template_attribute_value_ids.mapped("name")
         )
+        cls.pricelist_b = cls.env["product.pricelist"].create(
+            {
+                "name": "Tarifa B",
+                "company_id": cls.company_b.id,
+                "currency_id": cls.company_b.currency_id.id,
+            }
+        )
+        cls.partner = cls.env["res.partner"].create({"name": "Cliente Multi"})
 
     def test_name_company_stored_per_company(self):
         self.template.with_company(self.company_a).name_company = "Nombre A"
@@ -160,3 +168,38 @@ class TestProductNameMultiCompany(TransactionCase):
         self.assertEqual(
             product._get_display_name_for_company(self.company_a), "Producto de Seda"
         )
+
+    def test_sale_description_uses_company_name(self):
+        self.variant.with_company(self.company_a).name_company = "Producto de Seda"
+        description = self.variant.with_company(
+            self.company_a
+        ).get_product_multiline_description_sale()
+        self.assertEqual(description, "[111] Producto de Seda")
+
+    def test_sale_description_appends_description_sale(self):
+        self.template.description_sale = "Entrega en 24h"
+        self.variant.with_company(self.company_a).name_company = "Producto de Seda"
+        description = self.variant.with_company(
+            self.company_a
+        ).get_product_multiline_description_sale()
+        self.assertEqual(description, "[111] Producto de Seda\nEntrega en 24h")
+
+    def test_sale_line_resolves_name_against_order_company(self):
+        """La línea debe usar la compañía DEL PEDIDO, no la del usuario."""
+        # El nombre de la compañía no puede ser una subcadena del estándar, o
+        # el assert pasaría aunque el override no existiera.
+        self.variant.with_company(self.company_b).name_company = "Seda Premium B"
+        order = (
+            self.env["sale.order"]
+            .with_company(self.company_a)
+            .create(
+                {
+                    "partner_id": self.partner.id,
+                    "company_id": self.company_b.id,
+                    "pricelist_id": self.pricelist_b.id,
+                    "order_line": [(0, 0, {"product_id": self.variant.id})],
+                }
+            )
+        )
+        self.assertIn("Seda Premium B", order.order_line.name)
+        self.assertNotIn("Producto de Seda Azul con Gramaje 5", order.order_line.name)
