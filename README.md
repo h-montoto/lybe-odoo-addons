@@ -22,7 +22,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[product_name_multi_company](product_name_multi_company/) | 19.0.1.0.0 |  | Show a different product name per company on documents
+[product_name_multi_company](product_name_multi_company/) | 19.0.1.0.1 |  | Show a different product name per company on documents
 [sale_commission_partner](sale_commission_partner/) | 19.0.1.1.0 |  | Define specific commission plans per agent-customer pair
 
 [//]: # (end addons)

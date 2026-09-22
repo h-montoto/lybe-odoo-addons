@@ -71,6 +71,16 @@ companies prints each line with its own.
 Known issues / Roadmap
 ======================
 
+- The two stock reports are patched by changing the attributes of the
+  product ``span``, with ``priority="1"`` so that this inheritance is
+  applied before any other. If another module replaces the whole move
+  table or its ``tbody`` (a common customisation), the company-specific
+  name will not reach that report: the table printed is no longer the
+  standard one. Sale documents are not affected, because their
+  description is stored on the line and does not depend on the report
+  template. To cover a customised report, apply
+  ``product_id._get_display_name_for_company(move.company_id)`` in the
+  module that owns that template.
 - Editing the field always writes into the main company of the company
   switcher, which is what the ORM does with any company-dependent field.
   The *Per Company* summary makes the resulting state visible, but

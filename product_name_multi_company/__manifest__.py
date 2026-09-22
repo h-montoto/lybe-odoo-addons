@@ -3,7 +3,7 @@
 {
     "name": "Product Name Multi Company",
     "summary": "Show a different product name per company on documents",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "author": "LyBe Creators, Odoo Community Association (OCA)",
     "website": "https://github.com/h-montoto/lybe-odoo-addons",
     "category": "Product Management",
