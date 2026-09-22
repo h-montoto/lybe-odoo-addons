@@ -392,17 +392,82 @@ Only for development or testing purpose, do not use in production.
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-1">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-2">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="toc-entry-3">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="toc-entry-4">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-5">Maintainers</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-2">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-3">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-4">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-5">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-6">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-7">Maintainers</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<div class="section" id="usage">
+<h2><a class="toc-backref" href="#toc-entry-1">Usage</a></h2>
+<ol class="arabic simple">
+<li>Enable multi-company on the instance and make sure the user has
+access to the companies that need their own product names.</li>
+<li>Go to <em>Inventory &gt; Products &gt; Products</em> and open a product.</li>
+<li>Fill in <em>Company-specific Name</em> with the name to print for the
+company currently selected in the company switcher. The <em>Per Company</em>
+summary right below lists the effective name of every company you
+have access to, so you can check the whole picture without switching
+companies.</li>
+<li>Repeat for each company that needs a different name: switch the main
+company in the top-right selector and fill the field again. Leave it
+empty to keep the standard product name.</li>
+</ol>
+<p>The company-specific name is used on quotations, sale orders, the
+invoices issued from them, and both stock delivery reports. It is
+resolved against the company of the document, not against the company of
+the user printing it: a user working on company A who prints a delivery
+note of company B gets B’s name, and a batch report covering both
+companies prints each line with its own.</p>
+</div>
+<div class="section" id="known-issues-roadmap">
+<h2><a class="toc-backref" href="#toc-entry-2">Known issues / Roadmap</a></h2>
+<ul class="simple">
+<li>Editing the field always writes into the main company of the company
+switcher, which is what the ORM does with any company-dependent field.
+The <em>Per Company</em> summary makes the resulting state visible, but
+changing another company’s name still requires switching to it.</li>
+<li>Duplicating a product carries over the company-specific name of the
+active company only. The values defined for the other companies are
+not copied, because Odoo copies a company-dependent field by reading
+it in the context of the user doing the duplication.</li>
+<li>The name is defined per product template, not per variant. All
+variants of a template share the same company-specific base name; the
+attribute suffix added by Odoo (<tt class="docutils literal">(Red)</tt>, <tt class="docutils literal">(L)</tt>) is kept on top of
+it.</li>
+<li>Nothing is recomputed backwards. <tt class="docutils literal">sale.order.line.name</tt> stores the
+description when the line is created, and its compute depends on the
+product, not on the company of the order. Changing the company of a
+draft quotation, or changing a product’s company-specific name, leaves
+existing lines untouched. This is deliberate: recomputing would
+overwrite descriptions edited by hand and would alter documents
+already sent to the customer.</li>
+<li><tt class="docutils literal">display_name</tt> is left untouched. Lists, dropdowns and internal
+reports keep showing the standard name, because <tt class="docutils literal">display_name</tt> is
+resolved against the company of the user and not against the company
+of the document.</li>
+<li><tt class="docutils literal">product.supplierinfo.product_name</tt> still takes precedence on
+purchase documents. This module does not touch purchases.</li>
+<li><tt class="docutils literal">name_company</tt> is not translatable. Combining a per-company and a
+per-language name would need a field that is both
+<tt class="docutils literal">company_dependent</tt> and <tt class="docutils literal">translate</tt>, a combination the ORM
+rejects.</li>
+<li>Invoices created directly, without a sale order, use the standard
+name. Only invoices issued from a sale order inherit the
+company-specific name.</li>
+<li><tt class="docutils literal">stock.move.description_picking</tt> keeps comparing itself against the
+standard product name, so an extra description line may show up on a
+delivery report in edge cases where the picking description differs
+from the standard name.</li>
+</ul>
+</div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#toc-entry-1">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-3">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/h-montoto/lybe-odoo-addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -410,15 +475,15 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#toc-entry-2">Credits</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-4">Credits</a></h2>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#toc-entry-3">Authors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-5">Authors</a></h3>
 <ul class="simple">
 <li>LyBe Creators</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#toc-entry-4">Contributors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-6">Contributors</a></h3>
 <ul class="simple">
 <li><a class="reference external" href="https://www.lybecreators.com">LyBe Creators</a>:<ul>
 <li>Hugo Montoto &lt;<a class="reference external" href="mailto:hugo.montoto&#64;gmail.com">hugo.montoto&#64;gmail.com</a>&gt;</li>
@@ -427,7 +492,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-5">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-7">Maintainers</a></h3>
 <p>This module is part of the <a class="reference external" href="https://github.com/h-montoto/lybe-odoo-addons/tree/19.0/product_name_multi_company">h-montoto/lybe-odoo-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
 </div>

@@ -41,7 +41,7 @@ class ProductTemplate(models.Model):
         companies = self.env.user.company_ids
         for template in self:
             template.name_company_summary = "\n".join(
-                "%s: %s" % (company.name, template._get_name_for_company(company))
+                f"{company.name}: {template._get_name_for_company(company)}"
                 for company in companies
             )
 

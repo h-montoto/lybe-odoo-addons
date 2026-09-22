@@ -1,0 +1,87 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_name_multi_company
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-22 13:29+0000\n"
+"PO-Revision-Date: 2026-09-22 13:29+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_name_multi_company
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_product__name_company
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_template__name_company
+msgid "Company-specific Name"
+msgstr "Nombre específico de la compañía"
+
+#. module: product_name_multi_company
+#: model_terms:ir.ui.view,arch_db:product_name_multi_company.report_delivery_document_company_name
+#: model_terms:ir.ui.view,arch_db:product_name_multi_company.report_picking_company_name
+msgid "Customizable Desk"
+msgstr "Escritorio personalizable"
+
+#. module: product_name_multi_company
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_name_multi_company.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: product_name_multi_company
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_product__id
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_template__id
+#: model:ir.model.fields,field_description:product_name_multi_company.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_name_multi_company
+#: model:ir.model.fields,help:product_name_multi_company.field_product_product__name_company
+#: model:ir.model.fields,help:product_name_multi_company.field_product_template__name_company
+msgid ""
+"If set, this name replaces the product name on the documents of the company "
+"it is defined for (quotations, sale orders, invoices issued from them, and "
+"delivery notes). Leave it empty to use the standard product name."
+msgstr ""
+"Si se rellena, este nombre sustituye al nombre del producto en los "
+"documentos de la compañía para la que está definido (presupuestos, pedidos "
+"de venta, facturas emitidas a partir de ellos y albaranes). Déjelo vacío "
+"para usar el nombre estándar del producto."
+
+#. module: product_name_multi_company
+#: model:ir.model.fields,help:product_name_multi_company.field_product_product__name_company_summary
+#: model:ir.model.fields,help:product_name_multi_company.field_product_template__name_company_summary
+msgid ""
+"Name printed for each company the user has access to. The field above only "
+"edits the name of the company currently selected in the company switcher."
+msgstr ""
+"Nombre que se imprime para cada compañía a la que el usuario tiene acceso. "
+"El campo de arriba solo edita el nombre de la compañía seleccionada en ese "
+"momento en el selector de compañías."
+
+#. module: product_name_multi_company
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_product__name_company_summary
+#: model:ir.model.fields,field_description:product_name_multi_company.field_product_template__name_company_summary
+msgid "Per Company"
+msgstr "Por compañía"
+
+#. module: product_name_multi_company
+#: model:ir.model,name:product_name_multi_company.model_product_template
+msgid "Product"
+msgstr "Producto"
+
+#. module: product_name_multi_company
+#: model:ir.model,name:product_name_multi_company.model_product_product
+msgid "Product Variant"
+msgstr "Variante de producto"
+
+#. module: product_name_multi_company
+#: model:ir.model,name:product_name_multi_company.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de pedido de venta"

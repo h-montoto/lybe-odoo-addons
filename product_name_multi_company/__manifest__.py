@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
     "name": "Product Name Multi Company",
-    "summary": "Show a different product name per company on sale and delivery documents",
+    "summary": "Show a different product name per company on documents",
     "version": "19.0.1.0.0",
     "author": "LyBe Creators, Odoo Community Association (OCA)",
     "website": "https://github.com/h-montoto/lybe-odoo-addons",

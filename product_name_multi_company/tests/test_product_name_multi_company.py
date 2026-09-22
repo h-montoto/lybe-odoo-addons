@@ -117,7 +117,7 @@ class TestProductNameMultiCompany(TransactionCase):
         summary = self.template.with_company(self.company_a).name_company_summary
         self.assertIn("Company A: Nombre A", summary)
         self.assertIn("Company B: Nombre B", summary)
-        self.assertIn("Company C: %s" % self.template.name, summary)
+        self.assertIn(f"Company C: {self.template.name}", summary)
 
     def test_summary_is_the_same_from_any_company(self):
         """El resumen no depende de la compañía desde la que se mire."""

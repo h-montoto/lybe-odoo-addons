@@ -46,6 +46,68 @@ printing an order of company B gets B's name.
 .. contents::
    :local:
 
+Usage
+=====
+
+1. Enable multi-company on the instance and make sure the user has
+   access to the companies that need their own product names.
+2. Go to *Inventory > Products > Products* and open a product.
+3. Fill in *Company-specific Name* with the name to print for the
+   company currently selected in the company switcher. The *Per Company*
+   summary right below lists the effective name of every company you
+   have access to, so you can check the whole picture without switching
+   companies.
+4. Repeat for each company that needs a different name: switch the main
+   company in the top-right selector and fill the field again. Leave it
+   empty to keep the standard product name.
+
+The company-specific name is used on quotations, sale orders, the
+invoices issued from them, and both stock delivery reports. It is
+resolved against the company of the document, not against the company of
+the user printing it: a user working on company A who prints a delivery
+note of company B gets B's name, and a batch report covering both
+companies prints each line with its own.
+
+Known issues / Roadmap
+======================
+
+- Editing the field always writes into the main company of the company
+  switcher, which is what the ORM does with any company-dependent field.
+  The *Per Company* summary makes the resulting state visible, but
+  changing another company's name still requires switching to it.
+- Duplicating a product carries over the company-specific name of the
+  active company only. The values defined for the other companies are
+  not copied, because Odoo copies a company-dependent field by reading
+  it in the context of the user doing the duplication.
+- The name is defined per product template, not per variant. All
+  variants of a template share the same company-specific base name; the
+  attribute suffix added by Odoo (``(Red)``, ``(L)``) is kept on top of
+  it.
+- Nothing is recomputed backwards. ``sale.order.line.name`` stores the
+  description when the line is created, and its compute depends on the
+  product, not on the company of the order. Changing the company of a
+  draft quotation, or changing a product's company-specific name, leaves
+  existing lines untouched. This is deliberate: recomputing would
+  overwrite descriptions edited by hand and would alter documents
+  already sent to the customer.
+- ``display_name`` is left untouched. Lists, dropdowns and internal
+  reports keep showing the standard name, because ``display_name`` is
+  resolved against the company of the user and not against the company
+  of the document.
+- ``product.supplierinfo.product_name`` still takes precedence on
+  purchase documents. This module does not touch purchases.
+- ``name_company`` is not translatable. Combining a per-company and a
+  per-language name would need a field that is both
+  ``company_dependent`` and ``translate``, a combination the ORM
+  rejects.
+- Invoices created directly, without a sale order, use the standard
+  name. Only invoices issued from a sale order inherit the
+  company-specific name.
+- ``stock.move.description_picking`` keeps comparing itself against the
+  standard product name, so an extra description line may show up on a
+  delivery report in edge cases where the picking description differs
+  from the standard name.
+
 Bug Tracker
 ===========
 
