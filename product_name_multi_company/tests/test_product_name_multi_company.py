@@ -241,3 +241,10 @@ class TestProductNameMultiCompany(TransactionCase):
         )[0]
         self.assertIn(b"Seda Premium B", html)
         self.assertNotIn(b"Producto de Seda Azul con Gramaje 5", html)
+
+    def test_product_form_view_exposes_both_fields(self):
+        arch = self.env["product.template"].get_view(
+            self.env.ref("product.product_template_form_view").id, "form"
+        )["arch"]
+        self.assertIn("name_company", arch)
+        self.assertIn("name_company_summary", arch)

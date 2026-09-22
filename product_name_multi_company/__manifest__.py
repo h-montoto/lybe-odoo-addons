@@ -12,6 +12,7 @@
     "maintainers": [],
     "depends": ["product", "sale", "stock"],
     "data": [
+        "views/product_template_views.xml",
         "views/stock_report_views.xml",
     ],
     "installable": True,
