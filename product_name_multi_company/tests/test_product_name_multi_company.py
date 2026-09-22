@@ -203,3 +203,41 @@ class TestProductNameMultiCompany(TransactionCase):
         )
         self.assertIn("Seda Premium B", order.order_line.name)
         self.assertNotIn("Producto de Seda Azul con Gramaje 5", order.order_line.name)
+
+    def test_delivery_report_renders_company_name(self):
+        self.variant.with_company(self.company_b).name_company = "Seda Premium B"
+        picking_type = self.env["stock.picking.type"].search(
+            [("code", "=", "outgoing"), ("company_id", "=", self.company_b.id)],
+            limit=1,
+        )
+        picking = (
+            self.env["stock.picking"]
+            .with_company(self.company_b)
+            .create(
+                {
+                    "partner_id": self.partner.id,
+                    "picking_type_id": picking_type.id,
+                    "location_id": picking_type.default_location_src_id.id,
+                    "location_dest_id": picking_type.default_location_dest_id.id,
+                    "move_ids": [
+                        (
+                            0,
+                            0,
+                            {
+                                "product_id": self.variant.id,
+                                "product_uom_qty": 1.0,
+                                "location_id": picking_type.default_location_src_id.id,
+                                "location_dest_id": (
+                                    picking_type.default_location_dest_id.id
+                                ),
+                            },
+                        )
+                    ],
+                }
+            )
+        )
+        html = self.env["ir.actions.report"]._render_qweb_html(
+            "stock.action_report_delivery", picking.ids
+        )[0]
+        self.assertIn(b"Seda Premium B", html)
+        self.assertNotIn(b"Producto de Seda Azul con Gramaje 5", html)

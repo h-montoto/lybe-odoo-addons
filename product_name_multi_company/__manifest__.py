@@ -11,6 +11,8 @@
     "development_status": "Alpha",
     "maintainers": [],
     "depends": ["product", "sale", "stock"],
-    "data": [],
+    "data": [
+        "views/stock_report_views.xml",
+    ],
     "installable": True,
 }
