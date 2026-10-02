@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ai.invoice.digitization</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_digitalization']" position="after">
+                <block title="Digitalización IA de Facturas" id="ai_invoice_digitization_settings">
+                    <setting id="ai_invoice_provider" string="Proveedor de IA"
+                             help="Proveedor usado para extraer los datos de las facturas">
+                        <field name="ai_provider"/>
+                    </setting>
+                    <setting id="ai_invoice_api_key" string="Clave API">
+                        <field name="ai_api_key" password="True"/>
+                    </setting>
+                    <setting id="ai_invoice_model" string="Modelo">
+                        <field name="ai_model"/>
+                    </setting>
+                    <setting id="ai_invoice_auto_digitize" string="Digitalización automática"
+                             help="Digitalizar automáticamente al recibir un email con un PDF adjunto">
+                        <field name="ai_auto_digitize"/>
+                    </setting>
+                    <setting id="ai_invoice_auto_confirm" string="Confirmar sin revisión humana"
+                             help="Guardar los datos extraídos sin revisión humana">
+                        <field name="ai_auto_confirm"/>
+                        <div class="text-warning" invisible="not ai_auto_confirm">
+                            ⚠️ Las facturas se guardarán sin revisión humana
+                        </div>
+                        <div class="content-group" invisible="not ai_auto_confirm">
+                            <div class="row mt16">
+                                <label for="ai_min_confidence" string="Umbral mínimo de confianza" class="col-lg-4 o_light_label"/>
+                                <field name="ai_min_confidence"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

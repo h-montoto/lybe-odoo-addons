@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_digitization_wizard,ai.invoice.digitization.wizard,model_ai_invoice_digitization_wizard,account.group_account_user,1,1,1,1
+access_ai_digitization_wizard_line,ai.invoice.digitization.wizard.line,model_ai_invoice_digitization_wizard_line,account.group_account_user,1,1,1,1
