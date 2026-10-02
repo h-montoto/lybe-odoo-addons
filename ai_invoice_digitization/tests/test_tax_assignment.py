@@ -30,20 +30,28 @@ class TestAITaxAssignment(TransactionCase):
                 }
             )
 
-        # Creado antes que el resto para que una búsqueda ingenua por 0% lo encuentre primero.
+        # Creado antes que el resto para que una búsqueda ingenua por 0% lo
+        # encuentre primero.
         cls.tax_0_eu = purchase_tax("AI test 0% UE", 0.0, "consu")
         cls.tax_21_goods = purchase_tax("AI test 21% G", 21.0, "consu")
         cls.tax_21_services = purchase_tax("AI test 21% S", 21.0, "service")
-        # Creado antes que el 10% G para que una búsqueda ingenua por 10% lo encuentre primero.
+        # Creado antes que el 10% G para que una búsqueda ingenua por 10% lo
+        # encuentre primero.
         cls.tax_10_extra_services = purchase_tax("AI test 10% EX S", 10.0, "service")
-        # Como el "10% EX G" de l10n_es: impuesto de importación (DUA) que no participa en ningún mapeo.
-        cls.tax_10_unmapped_import = purchase_tax("AI test 10% EX G (DUA)", 10.0, "consu")
-        # Como el "10% IG" de l10n_es: nacional, pero mapeado en menos posiciones que el estándar.
+        # Como el "10% EX G" de l10n_es: impuesto de importación (DUA) que no
+        # participa en ningún mapeo.
+        cls.tax_10_unmapped_import = purchase_tax(
+            "AI test 10% EX G (DUA)", 10.0, "consu"
+        )
+        # Como el "10% IG" de l10n_es: nacional, pero mapeado en menos
+        # posiciones que el estándar.
         cls.tax_10_investment = purchase_tax("AI test 10% IG", 10.0, "consu")
         cls.tax_10_goods = purchase_tax("AI test 10% G", 10.0, "consu")
         cls.tax_21_extra_goods = purchase_tax("AI test 21% EX G", 21.0, "consu")
         cls.tax_21_extra_services = purchase_tax("AI test 21% EX S", 21.0, "service")
-        cls.tax_10_withholding = purchase_tax("AI test 10% G + retención", 10.0, "consu")
+        cls.tax_10_withholding = purchase_tax(
+            "AI test 10% G + retención", 10.0, "consu"
+        )
 
         cls.company.account_purchase_tax_id = cls.tax_21_goods
 
@@ -53,9 +61,30 @@ class TestAITaxAssignment(TransactionCase):
                 "name": "AI test Régimen Extracomunitario",
                 "company_id": cls.company.id,
                 "tax_ids": [
-                    (0, 0, {"tax_src_id": cls.tax_21_goods.id, "tax_dest_id": cls.tax_21_extra_goods.id}),
-                    (0, 0, {"tax_src_id": cls.tax_21_services.id, "tax_dest_id": cls.tax_21_extra_services.id}),
-                    (0, 0, {"tax_src_id": cls.tax_10_goods.id, "tax_dest_id": cls.tax_10_extra_services.id}),
+                    (
+                        0,
+                        0,
+                        {
+                            "tax_src_id": cls.tax_21_goods.id,
+                            "tax_dest_id": cls.tax_21_extra_goods.id,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "tax_src_id": cls.tax_21_services.id,
+                            "tax_dest_id": cls.tax_21_extra_services.id,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "tax_src_id": cls.tax_10_goods.id,
+                            "tax_dest_id": cls.tax_10_extra_services.id,
+                        },
+                    ),
                 ],
             }
         )
@@ -64,9 +93,30 @@ class TestAITaxAssignment(TransactionCase):
                 "name": "AI test Retención",
                 "company_id": cls.company.id,
                 "tax_ids": [
-                    (0, 0, {"tax_src_id": cls.tax_10_goods.id, "tax_dest_id": cls.tax_10_withholding.id}),
-                    (0, 0, {"tax_src_id": cls.tax_21_goods.id, "tax_dest_id": cls.tax_21_goods.id}),
-                    (0, 0, {"tax_src_id": cls.tax_10_investment.id, "tax_dest_id": cls.tax_10_investment.id}),
+                    (
+                        0,
+                        0,
+                        {
+                            "tax_src_id": cls.tax_10_goods.id,
+                            "tax_dest_id": cls.tax_10_withholding.id,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "tax_src_id": cls.tax_21_goods.id,
+                            "tax_dest_id": cls.tax_21_goods.id,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "tax_src_id": cls.tax_10_investment.id,
+                            "tax_dest_id": cls.tax_10_investment.id,
+                        },
+                    ),
                 ],
             }
         )
@@ -84,7 +134,11 @@ class TestAITaxAssignment(TransactionCase):
             }
         )
         cls.domestic_vendor = Partner.create(
-            {"name": "Proveedor Nacional S.L.", "vat": "ES-AI-TEST-1", "supplier_rank": 1}
+            {
+                "name": "Proveedor Nacional S.L.",
+                "vat": "ES-AI-TEST-1",
+                "supplier_rank": 1,
+            }
         )
         cls.national_regime_vendor = Partner.create(
             {
@@ -107,7 +161,9 @@ class TestAITaxAssignment(TransactionCase):
         super().setUp()
         self.move = self.env["account.move"].create({"move_type": "in_invoice"})
 
-    def _line(self, tax_percent, is_service=None, description="Claude Max subscription"):
+    def _line(
+        self, tax_percent, is_service=None, description="Claude Max subscription"
+    ):
         return {
             "description": description,
             "quantity": 1.0,
@@ -118,7 +174,9 @@ class TestAITaxAssignment(TransactionCase):
         }
 
     def _taxes_for(self, partner, line):
-        """Devuelve los impuestos que el módulo asigna a una única línea para ese proveedor."""
+        """Devuelve los impuestos que el módulo asigna a una única línea para
+        ese proveedor.
+        """
         values = self.move._build_ai_invoice_lines([line], partner)
         return self.env["account.tax"].browse(values[0]["tax_ids"][0][2])
 
@@ -191,8 +249,11 @@ class TestAITaxAssignment(TransactionCase):
         self.assertEqual(taxes, self.tax_10_goods)
 
     def test_domestic_vendor_keeps_tax_that_is_both_source_and_destination(self):
-        # fp_withholding mapea 21% G -> 21% G: ser destino no lo convierte en impuesto extranjero.
-        taxes = self._taxes_for(self.domestic_vendor, self._line(21.0, is_service=False))
+        # fp_withholding mapea 21% G -> 21% G: ser destino no lo convierte en
+        # impuesto extranjero.
+        taxes = self._taxes_for(
+            self.domestic_vendor, self._line(21.0, is_service=False)
+        )
         self.assertEqual(taxes, self.tax_21_goods)
 
     def test_fiscal_position_without_mappings_keeps_pdf_percentage(self):
@@ -208,7 +269,9 @@ class TestAITaxAssignment(TransactionCase):
         self.assertEqual(taxes, self.tax_21_services)
 
     def test_missing_tax_percent_without_fiscal_position_leaves_line_without_tax(self):
-        values = self.move._build_ai_invoice_lines([self._line(None)], self.domestic_vendor)
+        values = self.move._build_ai_invoice_lines(
+            [self._line(None)], self.domestic_vendor
+        )
         self.assertFalse(values[0]["tax_ids"])
 
     # --- País del proveedor -------------------------------------------------

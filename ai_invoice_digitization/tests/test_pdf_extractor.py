@@ -47,7 +47,8 @@ class TestPdfTextExtractor(BaseCase):
             extractor.extract(b"this is not a pdf file")
 
     def test_invalid_pdf_error_is_a_runtime_error(self):
-        # Los llamantes existentes capturan RuntimeError; las subclases no deben romperlos.
+        # Los llamantes existentes capturan RuntimeError; las subclases no
+        # deben romperlos.
         self.assertTrue(issubclass(InvalidPdfError, RuntimeError))
         self.assertTrue(issubclass(MissingPdfLibraryError, RuntimeError))
 

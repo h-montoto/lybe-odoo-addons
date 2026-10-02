@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
     )
 
     @api.depends("manual_invoice_ids")
-    def _get_invoiced(self):
+    def _get_invoiced(self):  # pylint: disable=missing-return
         super()._get_invoiced()
         for order in self:
             manual = order.manual_invoice_ids.filtered(

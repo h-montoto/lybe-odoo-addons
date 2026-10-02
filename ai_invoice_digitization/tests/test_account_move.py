@@ -74,7 +74,7 @@ class TestAccountMoveAIDigitization(TransactionCase):
         self.move._apply_ai_data(data)
 
         line = self.move.invoice_line_ids.filtered(
-            lambda l: "Servicio de desarrollo" in l.name
+            lambda line: "Servicio de desarrollo" in line.name
         )
         self.assertTrue(line)
         self.assertFalse(line.product_id)
@@ -83,7 +83,9 @@ class TestAccountMoveAIDigitization(TransactionCase):
         product = self.env["product.product"].create(
             {"name": "Claude Pro", "purchase_ok": True}
         )
-        found = self.move._find_product_from_description("Claude Pro\nJul 25Aug 25, 2026")
+        found = self.move._find_product_from_description(
+            "Claude Pro\nJul 25Aug 25, 2026"
+        )
         self.assertEqual(found, product)
 
     def test_find_product_returns_empty_when_no_good_match(self):
@@ -104,6 +106,9 @@ class TestAccountMoveAIDigitization(TransactionCase):
         }
         move = self.env["account.move"].message_new(
             msg_dict,
-            custom_values={"move_type": "in_invoice", "journal_id": purchase_journal.id},
+            custom_values={
+                "move_type": "in_invoice",
+                "journal_id": purchase_journal.id,
+            },
         )
         self.assertEqual(move.move_type, "in_invoice")

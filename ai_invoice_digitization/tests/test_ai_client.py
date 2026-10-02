@@ -12,7 +12,10 @@ _POST_TARGET = "odoo.addons.ai_invoice_digitization.services.ai_client.requests.
 
 class TestAIInvoiceClient(BaseCase):
     def setUp(self):
-        self.client = AIInvoiceClient(provider="openai", api_key="sk-test", model="gpt-4o-mini")
+        super().setUp()
+        self.client = AIInvoiceClient(
+            provider="openai", api_key="sk-test", model="gpt-4o-mini"
+        )
 
     @patch(_POST_TARGET)
     def test_extract_invoice_data_parses_valid_json_response(self, mock_post):
@@ -20,7 +23,11 @@ class TestAIInvoiceClient(BaseCase):
         mock_response.raise_for_status.return_value = None
         mock_response.json.return_value = {
             "choices": [
-                {"message": {"content": '{"confidence": 0.9, "invoice_number": "INV-001"}'}}
+                {
+                    "message": {
+                        "content": '{"confidence": 0.9, "invoice_number": "INV-001"}'
+                    }
+                }
             ]
         }
         mock_post.return_value = mock_response
@@ -34,7 +41,9 @@ class TestAIInvoiceClient(BaseCase):
     def test_extract_invoice_data_raises_user_error_on_malformed_json(self, mock_post):
         mock_response = MagicMock()
         mock_response.raise_for_status.return_value = None
-        mock_response.json.return_value = {"choices": [{"message": {"content": "not valid json"}}]}
+        mock_response.json.return_value = {
+            "choices": [{"message": {"content": "not valid json"}}]
+        }
         mock_post.return_value = mock_response
 
         with self.assertRaises(UserError):
@@ -79,7 +88,9 @@ class TestAIClientDoesNotLeakApiKey(BaseCase):
         )
         client = AIInvoiceClient(provider="gemini", api_key=self.API_KEY)
 
-        with self.assertLogs("odoo.addons.ai_invoice_digitization.services.ai_client", "ERROR") as logs:
+        with self.assertLogs(
+            "odoo.addons.ai_invoice_digitization.services.ai_client", "ERROR"
+        ) as logs:
             with self.assertRaises(UserError) as ctx:
                 client.extract_invoice_data("some invoice text")
 

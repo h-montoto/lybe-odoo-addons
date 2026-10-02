@@ -3,7 +3,7 @@ import logging
 from collections import Counter
 from difflib import SequenceMatcher
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 from ..services.ai_client import get_ai_client
@@ -37,9 +37,13 @@ class AccountMove(models.Model):
     )
 
     def _compute_ai_has_pdf_attachment(self):
-        """Calcula si la factura tiene un adjunto PDF, usado para mostrar el botón de digitalización."""
+        """Calcula si la factura tiene un adjunto PDF, usado para mostrar el
+        botón de digitalización.
+        """
         for move in self:
-            move.ai_has_pdf_attachment = move._has_pdf_attachment() if move.id else False
+            move.ai_has_pdf_attachment = (
+                move._has_pdf_attachment() if move.id else False
+            )
 
     def action_ai_digitize(self):
         """Extrae los datos de la factura mediante IA a partir del primer adjunto PDF.
@@ -52,7 +56,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         attachment = self._get_first_pdf_attachment()
         if not attachment:
-            raise UserError(_("Esta factura no tiene ningún adjunto PDF."))
+            raise UserError(self.env._("Esta factura no tiene ningún adjunto PDF."))
 
         self.ai_digitization_state = "processing"
         self.ai_error_message = False
@@ -73,7 +77,9 @@ class AccountMove(models.Model):
         self.ai_raw_result = json.dumps(data, ensure_ascii=False)
 
         auto_confirm = self._get_ai_setting("ai_invoice.auto_confirm") == "True"
-        min_confidence = float(self._get_ai_setting("ai_invoice.min_confidence", 0.85) or 0.85)
+        min_confidence = float(
+            self._get_ai_setting("ai_invoice.min_confidence", 0.85) or 0.85
+        )
         confidence = float(data.get("confidence") or 0.0)
 
         if auto_confirm and confidence >= min_confidence:
@@ -102,14 +108,20 @@ class AccountMove(models.Model):
         confidence = float(data.get("confidence") or 0.0)
 
         partner = self._find_partner_from_ai_data(vendor_data)
-        if not partner and vendor_data.get("name") and confidence > NEW_VENDOR_CONFIDENCE_THRESHOLD:
+        if (
+            not partner
+            and vendor_data.get("name")
+            and confidence > NEW_VENDOR_CONFIDENCE_THRESHOLD
+        ):
             partner = self.env["res.partner"].create(
                 {
                     "name": vendor_data["name"],
                     "vat": vendor_data.get("vat"),
                     "email": vendor_data.get("email"),
                     "phone": vendor_data.get("phone"),
-                    "country_id": self._find_country(vendor_data.get("country_code")).id,
+                    "country_id": self._find_country(
+                        vendor_data.get("country_code")
+                    ).id,
                     "company_type": "company",
                     "supplier_rank": 1,
                 }
@@ -125,12 +137,15 @@ class AccountMove(models.Model):
         if data.get("due_date"):
             values["invoice_date_due"] = data["due_date"]
         if data.get("currency"):
-            currency = self.env["res.currency"].search([("name", "=", data["currency"])], limit=1)
+            currency = self.env["res.currency"].search(
+                [("name", "=", data["currency"])], limit=1
+            )
             if currency:
                 values["currency_id"] = currency.id
 
         line_commands = [
-            (0, 0, vals) for vals in self._build_ai_invoice_lines(data.get("lines") or [], partner)
+            (0, 0, vals)
+            for vals in self._build_ai_invoice_lines(data.get("lines") or [], partner)
         ]
         if line_commands:
             values["invoice_line_ids"] = [(5, 0, 0)] + line_commands
@@ -164,10 +179,13 @@ class AccountMove(models.Model):
         self.ensure_one()
         vendor_data = data.get("vendor") or {}
         partner = self._find_partner_from_ai_data(vendor_data)
-        currency = self.env["res.currency"].search([("name", "=", data.get("currency"))], limit=1)
+        currency = self.env["res.currency"].search(
+            [("name", "=", data.get("currency"))], limit=1
+        )
 
         line_ids = [
-            (0, 0, vals) for vals in self._build_ai_invoice_lines(data.get("lines") or [], partner)
+            (0, 0, vals)
+            for vals in self._build_ai_invoice_lines(data.get("lines") or [], partner)
         ]
 
         return self.env["ai.invoice.digitization.wizard"].create(
@@ -187,7 +205,9 @@ class AccountMove(models.Model):
         )
 
     def _find_partner_from_ai_data(self, vendor_data: dict):
-        """Busca el proveedor por VAT exacto y, si no hay coincidencia, por similitud de nombre."""
+        """Busca el proveedor por VAT exacto y, si no hay coincidencia, por
+        similitud de nombre.
+        """
         Partner = self.env["res.partner"]
         vat = (vendor_data or {}).get("vat")
         if vat:
@@ -202,13 +222,20 @@ class AccountMove(models.Model):
         best_partner = Partner.browse()
         best_ratio = 0.0
         for partner in Partner.search([("supplier_rank", ">", 0)]):
-            ratio = SequenceMatcher(None, name.lower(), (partner.name or "").lower()).ratio()
+            ratio = SequenceMatcher(
+                None, name.lower(), (partner.name or "").lower()
+            ).ratio()
             if ratio > best_ratio:
                 best_ratio, best_partner = ratio, partner
-        return best_partner if best_ratio >= NAME_SIMILARITY_THRESHOLD else Partner.browse()
+        return (
+            best_partner
+            if best_ratio >= NAME_SIMILARITY_THRESHOLD
+            else Partner.browse()
+        )
 
     def _find_product_from_description(self, description: str):
-        """Busca un producto existente por contención o similitud con la descripción de la línea.
+        """Busca un producto existente por contención o similitud con la
+        descripción de la línea.
 
         Las descripciones de factura suelen traer texto extra pegado al
         nombre del producto (periodo de facturación, fechas...), p.ej.
@@ -234,14 +261,18 @@ class AccountMove(models.Model):
             if product_name in normalized_description:
                 return product
 
-            match = SequenceMatcher(None, normalized_description, product_name).find_longest_match(
-                0, len(normalized_description), 0, len(product_name)
-            )
+            match = SequenceMatcher(
+                None, normalized_description, product_name
+            ).find_longest_match(0, len(normalized_description), 0, len(product_name))
             score = match.size / len(product_name)
             if score > best_score:
                 best_score, best_product = score, product
 
-        return best_product if best_score >= NAME_SIMILARITY_THRESHOLD else Product.browse()
+        return (
+            best_product
+            if best_score >= NAME_SIMILARITY_THRESHOLD
+            else Product.browse()
+        )
 
     def _get_ai_fiscal_position(self, partner=None):
         """Posición fiscal que Odoo aplicaría a la factura con el proveedor detectado.
@@ -272,20 +303,25 @@ class AccountMove(models.Model):
         """
         is_service = line.get("is_service")
         tax_percent = line.get("tax_percent")
-        mapped_source_taxes = fiscal_position.tax_ids.tax_src_id if fiscal_position else None
+        mapped_source_taxes = (
+            fiscal_position.tax_ids.tax_src_id if fiscal_position else None
+        )
 
         if not mapped_source_taxes:
             return self._find_purchase_tax(tax_percent, is_service)
 
         if product:
-            base_taxes = product.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.company_id)
+            base_taxes = product.supplier_taxes_id.filtered(
+                lambda tax: tax.company_id == self.company_id
+            )
         else:
             # Un proveedor extranjero factura sin IVA español, así que un 0%
             # no indica el tipo aplicable: solo un % positivo es informativo.
             base_taxes = self.env["account.tax"]
             if tax_percent:
                 matching_sources = mapped_source_taxes.filtered(
-                    lambda tax: tax.type_tax_use == "purchase" and tax.amount == tax_percent
+                    lambda tax: tax.type_tax_use == "purchase"
+                    and tax.amount == tax_percent
                 )
                 base_taxes = self._pick_tax_by_scope(
                     self._prefer_domestic_taxes(matching_sources), is_service
@@ -293,11 +329,14 @@ class AccountMove(models.Model):
             if not base_taxes:
                 base_taxes = self.company_id.account_purchase_tax_id
             if is_service:
-                base_taxes = self._get_service_equivalent_taxes(base_taxes, mapped_source_taxes)
+                base_taxes = self._get_service_equivalent_taxes(
+                    base_taxes, mapped_source_taxes
+                )
         return fiscal_position.map_tax(base_taxes)
 
     def _get_service_equivalent_taxes(self, taxes, candidate_taxes):
-        """Sustituye cada impuesto de bienes por su equivalente de servicios con el mismo %.
+        """Sustituye cada impuesto de bienes por su equivalente de servicios con
+        el mismo %.
 
         El impuesto de compra por defecto de ``l10n_es`` es "21% G" (bienes),
         que en régimen extracomunitario acaba como importación de bienes; para
@@ -309,7 +348,7 @@ class AccountMove(models.Model):
                 result |= tax
                 continue
             equivalent = candidate_taxes.filtered(
-                lambda candidate: candidate.tax_scope == "service"
+                lambda candidate, tax=tax: candidate.tax_scope == "service"
                 and candidate.type_tax_use == tax.type_tax_use
                 and candidate.amount == tax.amount
             )[:1]
@@ -317,14 +356,20 @@ class AccountMove(models.Model):
         return result
 
     def _pick_tax_by_scope(self, taxes, is_service):
-        """Devuelve un único impuesto, prefiriendo el de ámbito servicio o bienes según la línea."""
+        """Devuelve un único impuesto, prefiriendo el de ámbito servicio o
+        bienes según la línea.
+        """
         if is_service is None or not taxes:
             return taxes[:1]
         wanted_scope = "service" if is_service else "consu"
-        return taxes.filtered(lambda tax: tax.tax_scope == wanted_scope)[:1] or taxes[:1]
+        return (
+            taxes.filtered(lambda tax: tax.tax_scope == wanted_scope)[:1] or taxes[:1]
+        )
 
     def _find_purchase_tax(self, tax_percent, is_service=None):
-        """Busca el impuesto de compra de la empresa actual que coincide con el porcentaje dado."""
+        """Busca el impuesto de compra de la empresa actual que coincide con el
+        porcentaje dado.
+        """
         self.ensure_one()
         if tax_percent is None:
             return self.env["account.tax"].browse()
@@ -360,17 +405,23 @@ class AccountMove(models.Model):
         mapping_sources = mappings.tax_src_id
         foreign_regime_taxes = mappings.tax_dest_id - mapping_sources
         source_usage = Counter(mapping.tax_src_id.id for mapping in mappings)
-        candidates = (taxes & mapping_sources) or (taxes - foreign_regime_taxes) or taxes
+        candidates = (
+            (taxes & mapping_sources) or (taxes - foreign_regime_taxes) or taxes
+        )
         return candidates.sorted(key=lambda tax: -source_usage[tax.id])
 
     def _find_country(self, country_code):
         """Busca el país por su código ISO 3166-1 alfa-2; vacío si no se reconoce."""
         if not country_code:
             return self.env["res.country"].browse()
-        return self.env["res.country"].search([("code", "=", country_code.strip().upper())], limit=1)
+        return self.env["res.country"].search(
+            [("code", "=", country_code.strip().upper())], limit=1
+        )
 
     def _get_first_pdf_attachment(self):
-        """Devuelve el primer adjunto PDF de la factura, o un recordset vacío si no hay ninguno."""
+        """Devuelve el primer adjunto PDF de la factura, o un recordset vacío si
+        no hay ninguno.
+        """
         self.ensure_one()
         return self.env["ir.attachment"].search(
             [
@@ -387,11 +438,14 @@ class AccountMove(models.Model):
         return bool(self._get_first_pdf_attachment())
 
     def _get_ai_setting(self, key: str, default=None):
-        """Lee un parámetro de configuración de la digitalización IA (``ir.config_parameter``)."""
+        """Lee un parámetro de configuración de la digitalización IA
+        (``ir.config_parameter``).
+        """
         return self.env["ir.config_parameter"].sudo().get_param(key, default)
 
     def message_new(self, msg_dict, custom_values=None):
-        """Dispara la digitalización automática cuando llega un email con un PDF adjunto.
+        """Dispara la digitalización automática cuando llega un email con un PDF
+        adjunto.
 
         ``msg_dict['attachments']`` se comprueba directamente porque, en el
         momento de ``message_new``, los adjuntos del email todavía no están
@@ -422,5 +476,7 @@ class AccountMove(models.Model):
                 try:
                     move.action_ai_digitize()
                 except Exception:
-                    _logger.exception("Fallo al digitalizar automáticamente la factura %s", move.id)
+                    _logger.exception(
+                        "Fallo al digitalizar automáticamente la factura %s", move.id
+                    )
         return move

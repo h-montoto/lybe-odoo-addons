@@ -13,7 +13,9 @@ class InvalidPdfError(RuntimeError):
 
 
 class PdfTextExtractor:
-    """Extrae el texto de un PDF de factura, probando distintas librerías disponibles."""
+    """Extrae el texto de un PDF de factura, probando distintas librerías
+    disponibles.
+    """
 
     def extract(self, attachment_data: bytes) -> str:
         """Extrae el texto de ``attachment_data`` (contenido binario de un PDF).

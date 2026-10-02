@@ -26,7 +26,8 @@ class AccountMove(models.Model):
     def _compute_manual_sale_order_ids(self):
         # TODO: The link between invoices and sale orders used here is a header-level
         # Many2many (manual_sale_order_ids / manual_invoice_ids) rather than the
-        # native line-level mechanism (sale.order.line -> account.move.line.sale_line_ids)
+        # native line-level mechanism (sale.order.line ->
+        # account.move.line.sale_line_ids)
         # that Odoo uses when creating invoices from a sale order. The UX is equivalent
         # in most cases, but edge cases may differ (e.g. invoicing status on the sale
         # order, downpayment handling, or invoice reconciliation flows). This should be
@@ -37,16 +38,20 @@ class AccountMove(models.Model):
             move.manual_sale_order_ids = move.manual_sale_order_ids | auto_orders
 
     @api.depends("manual_sale_order_ids")
-    def _compute_origin_so_count(self):
+    def _compute_origin_so_count(self):  # pylint: disable=missing-return
         super()._compute_origin_so_count()
         for move in self:
-            all_orders = move.line_ids.sale_line_ids.order_id | move.manual_sale_order_ids
+            all_orders = (
+                move.line_ids.sale_line_ids.order_id | move.manual_sale_order_ids
+            )
             if len(all_orders) != move.sale_order_count:
                 move.sale_order_count = len(all_orders)
 
     def action_view_source_sale_orders(self):
         self.ensure_one()
-        source_orders = self.line_ids.sale_line_ids.order_id | self.manual_sale_order_ids
+        source_orders = (
+            self.line_ids.sale_line_ids.order_id | self.manual_sale_order_ids
+        )
         result = self.env["ir.actions.act_window"]._for_xml_id("sale.action_orders")
         if len(source_orders) > 1:
             result["domain"] = [("id", "in", source_orders.ids)]

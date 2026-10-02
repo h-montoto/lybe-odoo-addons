@@ -17,10 +17,14 @@ class InvoiceDigitizationWizard(models.TransientModel):
     amount_tax = fields.Float("Impuestos", readonly=True)
     amount_total = fields.Float("Total", readonly=True)
 
-    line_ids = fields.One2many("ai.invoice.digitization.wizard.line", "wizard_id", string="Líneas")
+    line_ids = fields.One2many(
+        "ai.invoice.digitization.wizard.line", "wizard_id", string="Líneas"
+    )
 
     def action_apply(self):
-        """Escribe los datos revisados del wizard sobre la factura de proveedor y cierra."""
+        """Escribe los datos revisados del wizard sobre la factura de proveedor
+        y cierra.
+        """
         self.ensure_one()
         line_commands = [
             (
@@ -43,7 +47,9 @@ class InvoiceDigitizationWizard(models.TransientModel):
                 "ref": self.ref,
                 "invoice_date": self.invoice_date,
                 "invoice_date_due": self.invoice_date_due,
-                "currency_id": self.currency_id.id if self.currency_id else self.move_id.currency_id.id,
+                "currency_id": self.currency_id.id
+                if self.currency_id
+                else self.move_id.currency_id.id,
                 "invoice_line_ids": [(5, 0, 0)] + line_commands,
                 "ai_digitization_state": "done",
                 "ai_confidence": self.confidence,
@@ -52,7 +58,9 @@ class InvoiceDigitizationWizard(models.TransientModel):
         return {"type": "ir.actions.act_window_close"}
 
     def action_discard(self):
-        """Marca la factura como pendiente de nuevo y cierra el wizard sin aplicar cambios."""
+        """Marca la factura como pendiente de nuevo y cierra el wizard sin
+        aplicar cambios.
+        """
         self.ensure_one()
         self.move_id.ai_digitization_state = "pending"
         return {"type": "ir.actions.act_window_close"}

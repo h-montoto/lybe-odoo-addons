@@ -8,6 +8,10 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+# This client is a plain Python class with no access to an environment, so it
+# cannot use ``self.env._``; Odoo's ``_`` resolves the language from the caller.
+# pylint: disable=prefer-env-translation
+
 SYSTEM_PROMPT = """You are a specialized data extraction engine for vendor invoices.
 The text below was extracted from a PDF vendor bill (page breaks are marked with
 "--- PAGE n ---"). Extract ALL visible data and respond with EXCLUSIVELY valid JSON
@@ -48,11 +52,13 @@ Rules:
 - "confidence" (0.0-1.0) indicates the overall reliability of the extraction.
 - Dates must always be in ISO 8601 format (YYYY-MM-DD).
 - Amounts must always be numbers (float), never strings.
-- "country_code" is the vendor's country as an ISO 3166-1 alpha-2 code (e.g. "ES", "US", "IE"),
-  taken from the vendor's address or VAT number. Use null if it cannot be determined.
+- "country_code" is the vendor's country as an ISO 3166-1 alpha-2 code (e.g. "ES",
+  "US", "IE"), taken from the vendor's address or VAT number. Use null if it cannot be
+  determined.
 - "is_service" is true for services (subscriptions, software/SaaS, licenses, consulting,
   hosting, fees), false for physical goods, null if unclear.
-- "tax_percent" is the tax rate printed on the invoice for that line (0.0 if no tax is charged).
+- "tax_percent" is the tax rate printed on the invoice for that line (0.0 if no tax is
+  charged).
 - Respond ONLY with the JSON object, nothing else.
 """
 
@@ -72,7 +78,9 @@ PROVIDER_ENDPOINTS = {
 
 
 class AIInvoiceClient:
-    """Cliente que envía el texto de una factura a un proveedor de IA y devuelve datos estructurados."""
+    """Cliente que envía el texto de una factura a un proveedor de IA y devuelve
+    datos estructurados.
+    """
 
     def __init__(self, provider: str, api_key: str, model: str = None):
         if provider not in PROVIDER_ENDPOINTS:
@@ -82,15 +90,23 @@ class AIInvoiceClient:
         self.model = model or PROVIDER_DEFAULT_MODELS[provider]
 
     def extract_invoice_data(self, pdf_text: str) -> dict:
-        """Envía el texto del PDF a la IA y devuelve un dict estructurado con los datos de la factura."""
+        """Envía el texto del PDF a la IA y devuelve un dict estructurado con
+        los datos de la factura.
+        """
         try:
             raw_content = self._call_provider(pdf_text)
         except requests.exceptions.RequestException as exc:
             error = self._redact_api_key(str(exc))
-            _logger.error("Error al llamar al proveedor de IA %s: %s", self.provider, error)
+            _logger.error(
+                "Error al llamar al proveedor de IA %s: %s", self.provider, error
+            )
             raise UserError(
-                _("No se pudo contactar con el proveedor de IA (%(provider)s): %(error)s")
-                % {"provider": self.provider, "error": error}
+                _(
+                    "No se pudo contactar con el proveedor de IA (%(provider)s): "
+                    "%(error)s",
+                    provider=self.provider,
+                    error=error,
+                )
             ) from exc
 
         return self._parse_response(raw_content)
@@ -118,7 +134,9 @@ class AIInvoiceClient:
         return handlers[self.provider](pdf_text)
 
     def _call_openai_compatible(self, pdf_text: str) -> str:
-        """Llama a la API de OpenAI o DeepSeek (comparten el mismo formato de petición)."""
+        """Llama a la API de OpenAI o DeepSeek (comparten el mismo formato de
+        petición).
+        """
         response = requests.post(
             PROVIDER_ENDPOINTS[self.provider],
             headers={
@@ -196,5 +214,7 @@ class AIInvoiceClient:
 
 
 def get_ai_client(provider: str, api_key: str, model: str = None) -> AIInvoiceClient:
-    """Factoría que devuelve un AIInvoiceClient configurado para el proveedor indicado."""
+    """Factoría que devuelve un AIInvoiceClient configurado para el proveedor
+    indicado.
+    """
     return AIInvoiceClient(provider=provider, api_key=api_key, model=model)
