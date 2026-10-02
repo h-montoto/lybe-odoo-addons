@@ -376,15 +376,15 @@ ul.auto-toc {
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html"><img alt="License: LGPL-3" src="https://img.shields.io/badge/license-LGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/h-montoto/lybe-odoo-addons/tree/18.0/sale_timesheet_filter_locked"><img alt="h-montoto/lybe-odoo-addons" src="https://img.shields.io/badge/github-h--montoto%2Flybe--odoo--addons-lightgray.png?logo=github" /></a></p>
 <p>This module filters the <em>Sales Order Item</em> (<tt class="docutils literal">so_line</tt>) selector on
-timesheets so that it hides lines belonging to locked (<tt class="docutils literal">done</tt>) or
-cancelled (<tt class="docutils literal">cancel</tt>) sale orders.</p>
+timesheets so that it hides lines belonging to locked sale orders.</p>
 <p>When a salesperson locks a sale order, its lines are still offered on
 the timesheet selector, which leads to confusion and, above all, to
 hours being logged against orders that should no longer accept new
 charges. With this module those lines simply disappear from the
 selector.</p>
-<p>It inherits <tt class="docutils literal">account.analytic.line</tt> and adds a domain to <tt class="docutils literal">so_line</tt>;
-the rest of the field’s behaviour is kept unchanged.</p>
+<p>The lock condition is added on top of the native <tt class="docutils literal">sale_timesheet</tt>
+domain, which already restricts the selector to confirmed service lines
+of the timesheet’s customer, so cancelled orders stay hidden as well.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -408,10 +408,9 @@ selector of timesheets.</p>
 for new timesheet entries.</li>
 <li>To log more hours against a locked order, unlock it first, add the
 timesheet entry and lock it again.</li>
-<li>Lines of cancelled orders are hidden by the same rule.</li>
 </ol>
 <p>Existing timesheet entries are neither deleted nor hidden: the module
-only prevents creating new entries against locked or cancelled orders.</p>
+only prevents creating new entries against locked orders.</p>
 </div>
 <div class="section" id="bug-tracker">
 <h2><a class="toc-backref" href="#toc-entry-2">Bug Tracker</a></h2>

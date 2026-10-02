@@ -27,8 +27,7 @@ Sale Timesheet - Filter Locked Orders
 |badge1| |badge2| |badge3|
 
 This module filters the *Sales Order Item* (``so_line``) selector on
-timesheets so that it hides lines belonging to locked (``done``) or
-cancelled (``cancel``) sale orders.
+timesheets so that it hides lines belonging to locked sale orders.
 
 When a salesperson locks a sale order, its lines are still offered on
 the timesheet selector, which leads to confusion and, above all, to
@@ -36,8 +35,9 @@ hours being logged against orders that should no longer accept new
 charges. With this module those lines simply disappear from the
 selector.
 
-It inherits ``account.analytic.line`` and adds a domain to ``so_line``;
-the rest of the field's behaviour is kept unchanged.
+The lock condition is added on top of the native ``sale_timesheet``
+domain, which already restricts the selector to confirmed service lines
+of the timesheet's customer, so cancelled orders stay hidden as well.
 
 **Table of contents**
 
@@ -55,10 +55,9 @@ selector of timesheets.
    for new timesheet entries.
 3. To log more hours against a locked order, unlock it first, add the
    timesheet entry and lock it again.
-4. Lines of cancelled orders are hidden by the same rule.
 
 Existing timesheet entries are neither deleted nor hidden: the module
-only prevents creating new entries against locked or cancelled orders.
+only prevents creating new entries against locked orders.
 
 Bug Tracker
 ===========
