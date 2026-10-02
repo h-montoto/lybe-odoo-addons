@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 LyBe Creators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_move_form_invoice_origin" model="ir.ui.view">
+        <field name="name">account.move.form.invoice.origin</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+
+            <!-- Make invoice_origin visible and editable in Other Info tab -->
+            <xpath
+                expr="//page[@name='other_info']//field[@name='invoice_origin']"
+                position="attributes"
+            >
+                <attribute name="invisible">0</attribute>
+                <attribute name="readonly">0</attribute>
+                <attribute name="string">Origen / Pedido de venta</attribute>
+                <attribute name="help">Reference to the originating document (e.g. a sales order) when the invoice was created manually and not through the standard invoicing flow from a sales order.</attribute>
+            </xpath>
+
+            <!-- Field to manually link sale orders; feeds into the existing
+                 sale module stat button via _compute_source_sale_orders override -->
+            <xpath
+                expr="//page[@name='other_info']//field[@name='invoice_origin']"
+                position="after"
+            >
+                <field
+                    name="manual_sale_order_ids"
+                    widget="many2many_tags"
+                    string="Pedidos vinculados"
+                    options="{'no_create': True}"
+                    help="Manually link one or more sale orders to this invoice for traceability."
+                />
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
