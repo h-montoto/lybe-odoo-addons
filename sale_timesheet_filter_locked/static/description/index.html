@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sale Timesheet - Filter Locked Orders</title>
+</head>
+<body>
+    <section>
+        <h1>Sale Timesheet - Filter Locked Orders</h1>
+        <p>
+            Filtra el selector de <strong>Elemento de Pedido de Venta</strong>
+            en la aplicación de <strong>Partes de Horas</strong> para que no
+            muestre líneas de pedidos en estado <em>bloqueado</em> (done) o
+            <em>cancelado</em> (cancel).
+        </p>
+    </section>
+
+    <section>
+        <h2>Problema que resuelve</h2>
+        <p>
+            En Odoo 18 estándar, los operarios pueden seguir imputando horas a
+            líneas de pedidos de venta que ya han sido bloqueados o cancelados.
+            Esto provoca cargos involuntarios sobre pedidos cerrados y obliga a
+            tareas correctivas posteriores.
+        </p>
+    </section>
+
+    <section>
+        <h2>Cómo funciona</h2>
+        <p>
+            El módulo redefine el campo <code>so_line</code> del modelo
+            <code>account.analytic.line</code> añadiendo un dominio que excluye
+            las líneas cuyo pedido (<code>order_id.state</code>) esté en
+            <code>done</code> o <code>cancel</code>. Las imputaciones ya
+            existentes no se ven afectadas.
+        </p>
+    </section>
+
+    <section>
+        <h2>Flujo de uso</h2>
+        <ol>
+            <li>Trabajar con normalidad sobre pedidos en estado <code>sale</code>.</li>
+            <li>Al bloquear un pedido, sus líneas desaparecen del selector del parte de horas.</li>
+            <li>Si hay que añadir una línea nueva, desbloquear el pedido, añadirla y volver a bloquear.</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Dependencias</h2>
+        <ul>
+            <li><code>sale_timesheet</code></li>
+        </ul>
+    </section>
+</body>
+</html>
