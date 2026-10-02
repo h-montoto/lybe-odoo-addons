@@ -63,6 +63,7 @@ class AccountMove(models.Model):
         try:
             pdf_text = PdfTextExtractor().extract(attachment.raw)
             client = get_ai_client(
+                self.env,
                 provider=self._get_ai_setting("ai_invoice.provider", "openai"),
                 api_key=self._get_ai_setting("ai_invoice.api_key"),
                 model=self._get_ai_setting("ai_invoice.model", "gpt-4o-mini"),

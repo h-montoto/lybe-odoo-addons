@@ -3,14 +3,9 @@ import logging
 
 import requests
 
-from odoo import _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
-
-# This client is a plain Python class with no access to an environment, so it
-# cannot use ``self.env._``; Odoo's ``_`` resolves the language from the caller.
-# pylint: disable=prefer-env-translation
 
 SYSTEM_PROMPT = """You are a specialized data extraction engine for vendor invoices.
 The text below was extracted from a PDF vendor bill (page breaks are marked with
@@ -82,9 +77,11 @@ class AIInvoiceClient:
     datos estructurados.
     """
 
-    def __init__(self, provider: str, api_key: str, model: str = None):
+    def __init__(self, env, provider: str, api_key: str, model: str = None):
         if provider not in PROVIDER_ENDPOINTS:
             raise ValueError(f"Proveedor de IA no soportado: {provider}")
+        # Needed to translate error messages into the user's language.
+        self.env = env
         self.provider = provider
         self.api_key = api_key
         self.model = model or PROVIDER_DEFAULT_MODELS[provider]
@@ -101,7 +98,7 @@ class AIInvoiceClient:
                 "Error al llamar al proveedor de IA %s: %s", self.provider, error
             )
             raise UserError(
-                _(
+                self.env._(
                     "No se pudo contactar con el proveedor de IA (%(provider)s): "
                     "%(error)s",
                     provider=self.provider,
@@ -209,12 +206,16 @@ class AIInvoiceClient:
         except (json.JSONDecodeError, TypeError) as exc:
             _logger.error("Respuesta de IA no es JSON válido: %s", raw_content)
             raise UserError(
-                _("El proveedor de IA devolvió una respuesta que no es JSON válido.")
+                self.env._(
+                    "El proveedor de IA devolvió una respuesta que no es JSON válido."
+                )
             ) from exc
 
 
-def get_ai_client(provider: str, api_key: str, model: str = None) -> AIInvoiceClient:
+def get_ai_client(
+    env, provider: str, api_key: str, model: str = None
+) -> AIInvoiceClient:
     """Factoría que devuelve un AIInvoiceClient configurado para el proveedor
     indicado.
     """
-    return AIInvoiceClient(provider=provider, api_key=api_key, model=model)
+    return AIInvoiceClient(env=env, provider=provider, api_key=api_key, model=model)

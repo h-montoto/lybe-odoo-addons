@@ -3,6 +3,7 @@ import sys
 from unittest.mock import patch
 
 from odoo.tests.common import BaseCase
+from odoo.tools import mute_logger
 
 from ..services.pdf_extractor import (
     InvalidPdfError,
@@ -40,7 +41,14 @@ def _build_minimal_pdf_bytes(text: str = "Test Invoice") -> bytes:
     return buffer.getvalue()
 
 
+# Parsing garbage on purpose makes pypdf and the extractor log the failure.
+_mute_invalid_pdf_logs = mute_logger(
+    "pypdf._reader", "odoo.addons.ai_invoice_digitization.services.pdf_extractor"
+)
+
+
 class TestPdfTextExtractor(BaseCase):
+    @_mute_invalid_pdf_logs
     def test_extract_raises_runtime_error_on_invalid_pdf(self):
         extractor = PdfTextExtractor()
         with self.assertRaises(InvalidPdfError):
@@ -60,6 +68,7 @@ class TestPdfTextExtractor(BaseCase):
                 extractor.extract(b"%PDF-1.4 irrelevant")
         self.assertIn("pypdf", str(ctx.exception))
 
+    @_mute_invalid_pdf_logs
     def test_extract_reports_invalid_pdf_when_only_one_library_installed(self):
         extractor = PdfTextExtractor()
         with patch.dict(sys.modules, {"fitz": None}):

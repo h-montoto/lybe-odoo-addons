@@ -3,18 +3,19 @@ from unittest.mock import MagicMock, patch
 import requests
 
 from odoo.exceptions import UserError
-from odoo.tests.common import BaseCase
+from odoo.tests.common import TransactionCase
 
 from ..services.ai_client import AIInvoiceClient
 
+_CLIENT_LOGGER = "odoo.addons.ai_invoice_digitization.services.ai_client"
 _POST_TARGET = "odoo.addons.ai_invoice_digitization.services.ai_client.requests.post"
 
 
-class TestAIInvoiceClient(BaseCase):
+class TestAIInvoiceClient(TransactionCase):
     def setUp(self):
         super().setUp()
         self.client = AIInvoiceClient(
-            provider="openai", api_key="sk-test", model="gpt-4o-mini"
+            self.env, provider="openai", api_key="sk-test", model="gpt-4o-mini"
         )
 
     @patch(_POST_TARGET)
@@ -46,18 +47,20 @@ class TestAIInvoiceClient(BaseCase):
         }
         mock_post.return_value = mock_response
 
-        with self.assertRaises(UserError):
-            self.client.extract_invoice_data("some invoice text")
+        with self.assertLogs(_CLIENT_LOGGER, "ERROR"):
+            with self.assertRaises(UserError):
+                self.client.extract_invoice_data("some invoice text")
 
     @patch(_POST_TARGET)
     def test_extract_invoice_data_raises_user_error_on_timeout(self, mock_post):
         mock_post.side_effect = requests.exceptions.Timeout("connection timed out")
 
-        with self.assertRaises(UserError):
-            self.client.extract_invoice_data("some invoice text")
+        with self.assertLogs(_CLIENT_LOGGER, "ERROR"):
+            with self.assertRaises(UserError):
+                self.client.extract_invoice_data("some invoice text")
 
 
-class TestAIClientDoesNotLeakApiKey(BaseCase):
+class TestAIClientDoesNotLeakApiKey(TransactionCase):
     API_KEY = "AQ.secret-gemini-key-123"
 
     def _ok_gemini_response(self):
@@ -71,7 +74,7 @@ class TestAIClientDoesNotLeakApiKey(BaseCase):
     @patch(_POST_TARGET)
     def test_gemini_sends_api_key_in_header_not_in_url(self, mock_post):
         mock_post.return_value = self._ok_gemini_response()
-        client = AIInvoiceClient(provider="gemini", api_key=self.API_KEY)
+        client = AIInvoiceClient(self.env, provider="gemini", api_key=self.API_KEY)
 
         client.extract_invoice_data("some invoice text")
 
@@ -86,11 +89,9 @@ class TestAIClientDoesNotLeakApiKey(BaseCase):
         mock_post.side_effect = requests.exceptions.HTTPError(
             f"402 Client Error: Payment Required for url: https://example.com/?key={self.API_KEY}"
         )
-        client = AIInvoiceClient(provider="gemini", api_key=self.API_KEY)
+        client = AIInvoiceClient(self.env, provider="gemini", api_key=self.API_KEY)
 
-        with self.assertLogs(
-            "odoo.addons.ai_invoice_digitization.services.ai_client", "ERROR"
-        ) as logs:
+        with self.assertLogs(_CLIENT_LOGGER, "ERROR") as logs:
             with self.assertRaises(UserError) as ctx:
                 client.extract_invoice_data("some invoice text")
 
@@ -101,8 +102,9 @@ class TestAIClientDoesNotLeakApiKey(BaseCase):
     @patch(_POST_TARGET)
     def test_error_redaction_tolerates_missing_api_key(self, mock_post):
         mock_post.side_effect = requests.exceptions.Timeout("connection timed out")
-        client = AIInvoiceClient(provider="gemini", api_key=None)
+        client = AIInvoiceClient(self.env, provider="gemini", api_key=None)
 
-        with self.assertRaises(UserError) as ctx:
-            client.extract_invoice_data("some invoice text")
+        with self.assertLogs(_CLIENT_LOGGER, "ERROR"):
+            with self.assertRaises(UserError) as ctx:
+                client.extract_invoice_data("some invoice text")
         self.assertIn("connection timed out", str(ctx.exception))
