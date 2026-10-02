@@ -6,7 +6,7 @@
     "category": "Accounting/Accounting",
     "summary": "Exposes invoice origin field and allows linking sale orders manually",
     "author": "LyBe Creators, Odoo Community Association (OCA)",
-    "website": "https://github.com/OCA/account-invoicing",
+    "website": "https://github.com/h-montoto/lybe-odoo-addons",
     "license": "AGPL-3",
     "depends": ["account", "sale"],
     "data": [
