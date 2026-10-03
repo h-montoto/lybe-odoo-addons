@@ -1,0 +1,43 @@
+$o-timeline-milestone-colors: (
+    "pending": $info,
+    "reached": $success,
+    "exceeded": $danger,
+);
+
+.vis-item.vis-background.o_timeline_milestone {
+    // Drawn over the task bars, like a deadline line, while clicks and drags
+    // still reach the tasks below.
+    z-index: 2;
+    pointer-events: none;
+    // At year scale a day is narrower than a pixel: keep the line visible.
+    min-width: 2px;
+    border-left: 2px solid;
+    .vis-item-overflow {
+        overflow: visible;
+    }
+    .o_timeline_milestone_label {
+        display: inline-block;
+        max-width: 14em;
+        overflow: hidden;
+        padding: 0 4px;
+        border-radius: 0 3px 3px 0;
+        background-color: rgba($white, 0.9);
+        font-size: 0.85em;
+        font-weight: bold;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    @each $status, $color in $o-timeline-milestone-colors {
+        &.o_timeline_milestone_#{$status} {
+            border-color: $color;
+            background-color: rgba($color, 0.08);
+            .o_timeline_milestone_label {
+                color: $color;
+            }
+        }
+    }
+}
+
+.vis-item.o_timeline_task_milestone_late {
+    border: 2px dashed $danger;
+}

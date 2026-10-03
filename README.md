@@ -24,6 +24,7 @@ addon | version | maintainers | summary
 --- | --- | --- | ---
 [account_move_invoice_origin_editable](account_move_invoice_origin_editable/) | 18.0.1.0.0 |  | Exposes invoice origin field and allows linking sale orders manually
 [ai_invoice_digitization](ai_invoice_digitization/) | 18.0.1.0.0 |  | Extracts vendor bill data from PDFs using AI, including line items
+[project_timeline_milestone](project_timeline_milestone/) | 18.0.1.0.0 |  | Show project milestones on the task timeline
 [project_timesheet_time_control_rounding](project_timesheet_time_control_rounding/) | 18.0.1.0.0 |  | Minimum duration and rounding period for the task timer
 [sale_order_end_customer](sale_order_end_customer/) | 18.0.1.1.1 |  | Track the end customer on sale orders and invoices
 [sale_timesheet_filter_locked](sale_timesheet_filter_locked/) | 18.0.1.0.1 |  | Hide sale order lines of locked orders on timesheets
