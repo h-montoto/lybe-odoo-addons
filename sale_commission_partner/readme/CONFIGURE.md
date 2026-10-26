@@ -11,6 +11,9 @@ commissions per customer*.
 
 Take into account that:
 
+-   Rules can only be created or changed by users of the
+    *Commissions / Manager* group. Users of the *Commissions / User* group
+    can see them, but not change them.
 -   The *Agent commissions* tab is only shown on customers having agents
     assigned, as a rule for an agent that does not work with the customer
     would never be applied. For the same reason, the *Agent* column only

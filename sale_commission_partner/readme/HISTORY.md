@@ -1,3 +1,11 @@
+## 19.0.1.1.1 (2026-10-26)
+
+- Rules are managed by the *Commissions / Manager* group instead of
+  *Sales / Administrator*, the same group that manages the commission
+  plans. *Commissions / User* can only read them.
+- Invoicing users can read the rules, so that the specific plan is also
+  applied on the invoices they create.
+
 ## 19.0.1.1.0 (2026-09-21)
 
 - The *Agent commissions* tab is only shown on customers having agents
