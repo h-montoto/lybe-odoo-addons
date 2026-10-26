@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sale_commission_partner_agent_manager,sale.commission.partner.agent manager,model_sale_commission_partner_agent,sales_team.group_sale_manager,1,1,1,1
+access_sale_commission_partner_agent_manager,sale.commission.partner.agent manager,model_sale_commission_partner_agent,commission_oca.group_commission_manager,1,1,1,1
+access_sale_commission_partner_agent_commission_user,sale.commission.partner.agent commission user,model_sale_commission_partner_agent,commission_oca.group_commission_user,1,0,0,0
 access_sale_commission_partner_agent_user,sale.commission.partner.agent user,model_sale_commission_partner_agent,sales_team.group_sale_salesman,1,0,0,0
+access_sale_commission_partner_agent_invoice,sale.commission.partner.agent invoice,model_sale_commission_partner_agent,account.group_account_invoice,1,0,0,0

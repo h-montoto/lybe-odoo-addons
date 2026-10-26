@@ -65,6 +65,9 @@ commissions per customer*.
 
 Take into account that:
 
+- Rules can only be created or changed by users of the *Commissions /
+  Manager* group. Users of the *Commissions / User* group can see them,
+  but not change them.
 - The *Agent commissions* tab is only shown on customers having agents
   assigned, as a rule for an agent that does not work with the customer
   would never be applied. For the same reason, the *Agent* column only
@@ -108,6 +111,15 @@ Known issues / Roadmap
 
 Changelog
 =========
+
+19.0.1.1.1 (2026-10-26)
+-----------------------
+
+- Rules are managed by the *Commissions / Manager* group instead of
+  *Sales / Administrator*, the same group that manages the commission
+  plans. *Commissions / User* can only read them.
+- Invoicing users can read the rules, so that the specific plan is also
+  applied on the invoices they create.
 
 19.0.1.1.0 (2026-09-21)
 -----------------------
