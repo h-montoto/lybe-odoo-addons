@@ -55,7 +55,8 @@ msgstr ""
 msgid ""
 "Agents listed here use this commission plan when selling to\n"
 "                        this customer, instead of their own default plan. Agents\n"
-"                        without a line keep their default plan."
+"                        without a line keep the commission they would get without\n"
+"                        this tab (their default plan or the pricelist one)."
 msgstr ""
 
 #. module: sale_commission_partner
