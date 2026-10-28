@@ -33,7 +33,8 @@
                     <p class="text-muted">
                         Agents listed here use this commission plan when selling to
                         this customer, instead of their own default plan. Agents
-                        without a line keep their default plan.
+                        without a line keep the commission they would get without
+                        this tab (their default plan or the pricelist one).
                     </p>
                 </page>
             </page>

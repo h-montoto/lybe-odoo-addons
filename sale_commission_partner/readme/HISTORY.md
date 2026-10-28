@@ -1,3 +1,8 @@
+## 19.0.1.1.4 (2026-10-28)
+
+- The help text of the *Agent commissions* tab no longer says that agents
+  without a line keep their default plan, as they may get the pricelist one.
+
 ## 19.0.1.1.3 (2026-10-28)
 
 - The specific plan of the customer is kept when the agent of an order or
