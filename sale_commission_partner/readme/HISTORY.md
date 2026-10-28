@@ -1,3 +1,8 @@
+## 19.0.1.1.3 (2026-10-28)
+
+- The specific plan of the customer is kept when the agent of an order or
+  invoice line is changed by hand, instead of getting the agent default plan.
+
 ## 19.0.1.1.2 (2026-10-28)
 
 - Agents without a rule on a customer having rules for other agents keep the

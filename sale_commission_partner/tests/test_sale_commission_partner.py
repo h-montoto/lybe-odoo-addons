@@ -343,3 +343,66 @@ class TestSaleCommissionPartner(TestSaleCommissionPartnerCommon):
         self._create_rule(self.customer_a, self.agent, self.commission_specific)
         order = self._create_sale_order(self.customer_a)
         self.assertEqual(order.order_line.agent_ids.agent_id, self.agent)
+
+    def _change_agent(self, document_line, old_agent, new_agent):
+        """Replace the agent of a commission line, as done by hand on the form."""
+        document_line.agent_ids.filtered(lambda x: x.agent_id == new_agent).unlink()
+        document_line.agent_ids.filtered(
+            lambda x: x.agent_id == old_agent
+        ).agent_id = new_agent
+        return document_line.agent_ids
+
+    def _create_invoice(self, customer):
+        return self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "partner_id": customer.id,
+                "invoice_date": fields.Date.today(),
+                "invoice_line_ids": [
+                    Command.create(
+                        {"product_id": self.sale_product.id, "quantity": 1.0}
+                    )
+                ],
+            }
+        )
+
+    def test_specific_plan_applied_when_the_agent_is_changed_on_an_invoice(self):
+        other_agent = self._create_other_agent()
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        invoice = self._create_invoice(self.customer_a)
+        line_agents = self._change_agent(
+            invoice.invoice_line_ids, other_agent, self.agent
+        )
+        self.assertEqual(line_agents.agent_id, self.agent)
+        self.assertEqual(line_agents.commission_id, self.commission_specific)
+
+    def test_specific_plan_applied_when_the_agent_is_changed_on_an_order(self):
+        other_agent = self._create_other_agent()
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        order = self._create_sale_order(self.customer_a)
+        line_agents = self._change_agent(order.order_line, other_agent, self.agent)
+        self.assertEqual(line_agents.agent_id, self.agent)
+        self.assertEqual(line_agents.commission_id, self.commission_specific)
+
+    def test_agent_without_rule_gets_its_default_plan_when_set_on_a_line(self):
+        other_agent = self._create_other_agent()
+        other_agent.commission_id = self.commission_other
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        invoice = self._create_invoice(self.customer_a)
+        line_agents = self._change_agent(
+            invoice.invoice_line_ids, self.agent, other_agent
+        )
+        self.assertEqual(line_agents.agent_id, other_agent)
+        self.assertEqual(line_agents.commission_id, self.commission_other)
+
+    def test_specific_plan_of_the_company_applied_on_a_child_contact_invoice(self):
+        other_agent = self._create_other_agent()
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        child = self.res_partner_model.create(
+            {"name": "Customer A - Invoicing", "parent_id": self.customer_a.id}
+        )
+        invoice = self._create_invoice(child)
+        line_agents = self._change_agent(
+            invoice.invoice_line_ids, other_agent, self.agent
+        )
+        self.assertEqual(line_agents.commission_id, self.commission_specific)

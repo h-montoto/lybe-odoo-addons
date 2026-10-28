@@ -3,7 +3,7 @@
 {
     "name": "Sale Commission Partner Pricelist",
     "summary": "Keep the agent-customer commission plans when the pricelist changes",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "author": "LyBe Creators, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/commission",
     "category": "Sales Management",
