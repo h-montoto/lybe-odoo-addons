@@ -112,6 +112,13 @@ Known issues / Roadmap
 Changelog
 =========
 
+19.0.1.1.2 (2026-10-28)
+-----------------------
+
+- Agents without a rule on a customer having rules for other agents keep
+  the plan given by the rest of modules (for instance, the plan of the
+  pricelist), instead of always getting their default plan.
+
 19.0.1.1.1 (2026-10-26)
 -----------------------
 

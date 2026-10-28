@@ -11,7 +11,11 @@ class CommissionMixin(models.AbstractModel):
     def _prepare_agents_vals_partner(self, partner, settlement_type=None):
         """Apply the commission plan defined for the agent-customer pair, if any.
 
-        The settlement type has to be evaluated against the effective plan and
+        Only the agents having a rule get their plan replaced. The rest keep
+        the plan given by ``_prepare_agent_vals``, which other modules (like
+        the pricelist commissions) may have already changed.
+
+        The settlement type has to be evaluated against the specific plan and
         not against the agent's default one, as both may differ.
         """
         specific_commissions = partner._get_specific_agent_commissions()
@@ -19,7 +23,8 @@ class CommissionMixin(models.AbstractModel):
             return super()._prepare_agents_vals_partner(partner, settlement_type)
         vals_list = []
         for agent in partner.commission_agent_ids:
-            commission = specific_commissions.get(agent) or agent.commission_id
+            specific_commission = specific_commissions.get(agent)
+            commission = specific_commission or agent.commission_id
             if (
                 settlement_type
                 and commission.settlement_type
@@ -27,6 +32,7 @@ class CommissionMixin(models.AbstractModel):
             ):
                 continue
             vals = self._prepare_agent_vals(agent)
-            vals["commission_id"] = commission.id
+            if specific_commission:
+                vals["commission_id"] = specific_commission.id
             vals_list.append(Command.create(vals))
         return vals_list

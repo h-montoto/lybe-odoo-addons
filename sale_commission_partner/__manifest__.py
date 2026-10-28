@@ -3,7 +3,7 @@
 {
     "name": "Sale Commission Partner",
     "summary": "Define specific commission plans per agent-customer pair",
-    "version": "19.0.1.1.1",
+    "version": "19.0.1.1.2",
     "author": "LyBe Creators, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/commission",
     "category": "Sales Management",

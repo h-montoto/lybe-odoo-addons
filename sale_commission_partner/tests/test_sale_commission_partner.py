@@ -1,6 +1,8 @@
 # Copyright 2026 LyBe Creators - Hugo Montoto <hugo.montoto@gmail.com>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from unittest.mock import patch
+
 from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
 
@@ -262,3 +264,82 @@ class TestSaleCommissionPartner(TestSaleCommissionPartnerCommon):
     def test_customer_rules_are_not_listed_as_agent_rules(self):
         self._create_rule(self.customer_a, self.agent, self.commission_specific)
         self.assertFalse(self.customer_a.agent_commission_partner_ids)
+
+    def _patch_initial_plan(self, model_name, commission):
+        """Simulate another module (e.g. pricelist commissions) choosing the
+        initial plan of the agents instead of their default one."""
+
+        def _prepare_agent_vals(line, agent):
+            return {"agent_id": agent.id, "commission_id": commission.id}
+
+        return patch.object(
+            type(self.env[model_name]), "_prepare_agent_vals", _prepare_agent_vals
+        )
+
+    def _create_other_agent(self):
+        other_agent = self.res_partner_model.create(
+            {
+                "name": "Test Agent - Without specific plan",
+                "agent": True,
+                "settlement": "monthly",
+                "commission_id": self.commission_default.id,
+            }
+        )
+        self.customer_a.commission_agent_ids = [Command.link(other_agent.id)]
+        return other_agent
+
+    def test_agent_without_rule_keeps_the_plan_set_by_other_modules_on_orders(self):
+        other_agent = self._create_other_agent()
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        with self._patch_initial_plan("sale.order.line", self.commission_other):
+            order = self._create_sale_order(self.customer_a)
+            # Agents are computed on flush, which has to happen while patched
+            self.env.flush_all()
+        line_agents = order.order_line.agent_ids
+        self.assertEqual(
+            line_agents.filtered(lambda x: x.agent_id == self.agent).commission_id,
+            self.commission_specific,
+        )
+        self.assertEqual(
+            line_agents.filtered(lambda x: x.agent_id == other_agent).commission_id,
+            self.commission_other,
+        )
+
+    def test_agent_without_rule_keeps_the_plan_set_by_other_modules_on_invoices(
+        self,
+    ):
+        other_agent = self._create_other_agent()
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        with self._patch_initial_plan("account.move.line", self.commission_other):
+            invoice = self.env["account.move"].create(
+                {
+                    "move_type": "out_invoice",
+                    "partner_id": self.customer_a.id,
+                    "invoice_date": fields.Date.today(),
+                    "invoice_line_ids": [
+                        Command.create(
+                            {"product_id": self.sale_product.id, "quantity": 1.0}
+                        )
+                    ],
+                }
+            )
+            self.env.flush_all()
+        line_agents = invoice.invoice_line_ids.agent_ids
+        self.assertEqual(
+            line_agents.filtered(lambda x: x.agent_id == self.agent).commission_id,
+            self.commission_specific,
+        )
+        self.assertEqual(
+            line_agents.filtered(lambda x: x.agent_id == other_agent).commission_id,
+            self.commission_other,
+        )
+
+    def test_agent_without_rule_is_skipped_as_in_the_base_module(self):
+        manual_commission = self.commission_model.create(
+            {"name": "Manual plan", "fix_qty": 30.0, "settlement_type": "manual"}
+        )
+        other_agent = self._create_other_agent()
+        other_agent.commission_id = manual_commission
+        self._create_rule(self.customer_a, self.agent, self.commission_specific)
+        order = self._create_sale_order(self.customer_a)
+        self.assertEqual(order.order_line.agent_ids.agent_id, self.agent)
